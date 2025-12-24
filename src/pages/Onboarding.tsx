@@ -1,5 +1,6 @@
 import svgPaths from "@/components/ui/icons/onboarding-step-svg";
 import imgLogo4 from "figma:asset/183455f9c95614951c915b43688a9887b44c6a17.png";
+import { BackgroundDecor } from "@/components/ui/BackgroundDecor";
 
 function NotificationIcon() {
   return (
@@ -54,22 +55,6 @@ function ArrowForwardIcon() {
   );
 }
 
-function ScatterBackground() {
-  return (
-    <div className="absolute left-[5%] sm:left-[10%] lg:left-[15%] xl:left-[18%] top-[15%] sm:top-[18%] lg:top-[20%] w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] lg:w-[1000px] lg:h-[1000px] xl:w-[1200px] xl:h-[1200px] 2xl:w-[1291px] 2xl:h-[1291px] pointer-events-none">
-      <div className="absolute inset-[-6.92%_-7.47%_-5.91%_-6.69%]">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 1473.75 1456.64" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-          <use xlinkHref="#stroke0_13_542" />
-          <defs>
-            <g id="stroke0_13_542">
-              <path d={svgPaths.p3df66900} fill="#8149E4" fillOpacity="0.5" />
-            </g>
-          </defs>
-        </svg>
-      </div>
-    </div>
-  );
-}
 
 interface OnboardingStepPageProps {
   userName?: string;
@@ -93,8 +78,8 @@ export function OnboardingStepPage({
 
   return (
     <div className="bg-[#0f0f0f] min-h-screen w-full flex flex-col relative overflow-hidden">
-      {/* Background Decorative Element - Purple Scatter Ring */}
-      <ScatterBackground />
+      {/* Background Decorative Element */}
+      <BackgroundDecor />
 
       {/* Nav Bar */}
       <NavBar userInitials={userInitials} />

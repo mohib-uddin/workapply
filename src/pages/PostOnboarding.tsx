@@ -1,6 +1,7 @@
 import svgPaths from "@/components/ui/icons/onboarding-common-svg";
 import imgLogo4 from "figma:asset/183455f9c95614951c915b43688a9887b44c6a17.png";
 import React from "react";
+import { BackgroundDecor } from "@/components/ui/BackgroundDecor";
 
 function NotificationIcon() {
   return (
@@ -38,80 +39,6 @@ function NavBar({ userInitials }: { userInitials?: string }) {
   );
 }
 
-function CircleBackground() {
-  return (
-    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] sm:w-[700px] sm:h-[700px] lg:w-[900px] lg:h-[900px] xl:w-[1100px] xl:h-[1100px] 2xl:w-[1291px] 2xl:h-[1291px] pointer-events-none">
-      <svg className="block w-full h-full" viewBox="0 0 1149 634" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-        <use xlinkHref="#stroke0_post" transform="translate(1151.79 992.716) scale(0.537083) rotate(6.92844)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1250.32 1100.88) scale(0.398478) rotate(94.3091)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1084.65 1142.3) scale(0.327193) rotate(18.0054)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1104.36 1391.34) scale(0.551642) rotate(-156.609)" />
-        <use xlinkHref="#stroke0_post" transform="translate(917.515 1314.54) scale(0.260068) rotate(-56.3223)" />
-        <use xlinkHref="#stroke0_post" transform="translate(988.763 1284.63) scale(0.264313) rotate(103.48)" />
-        <use xlinkHref="#stroke0_post" transform="translate(828.518 1379.93) scale(0.278281) rotate(-83.9397)" />
-        <use xlinkHref="#stroke0_post" transform="translate(874.444 1265.97) scale(0.407539) rotate(80.9963)" />
-        <use xlinkHref="#stroke0_post" transform="translate(812.977 1334.33) scale(0.267553) rotate(117.109)" />
-        <use xlinkHref="#stroke0_post" transform="translate(655.046 1243.61) scale(0.457084) rotate(33.9959)" />
-        <use xlinkHref="#stroke0_post" transform="translate(566.486 1319.65) scale(0.216367) rotate(-12.7275)" />
-        <use xlinkHref="#stroke0_post" transform="translate(621.339 1308.65) scale(0.245528) rotate(106.322)" />
-        <use xlinkHref="#stroke0_post" transform="translate(566.966 1263.31) scale(0.319975) rotate(86.8873)" />
-        <use xlinkHref="#stroke0_post" transform="translate(521.886 1288.4) scale(0.245616) rotate(121.43)" />
-        <use xlinkHref="#stroke0_post" transform="translate(378.831 1339.32) scale(0.276333) rotate(-101.405)" />
-        <use xlinkHref="#stroke0_post" transform="translate(373.513 1200.52) scale(0.224477) rotate(45.7147)" />
-        <use xlinkHref="#stroke0_post" transform="translate(381.979 1141.68) scale(0.39605) rotate(82.0435)" />
-        <use xlinkHref="#stroke0_post" transform="translate(220.318 1056.34) scale(0.464901) rotate(25.7817)" />
-        <use xlinkHref="#stroke0_post" transform="translate(231.855 1187.68) scale(0.342645) rotate(-150.624)" />
-        <use xlinkHref="#stroke0_post" transform="translate(114.036 1091.32) scale(0.274974) rotate(-75.3104)" />
-        <use xlinkHref="#stroke0_post" transform="translate(61.0421 1078.08) scale(0.459858) rotate(-92.2956)" />
-        <use xlinkHref="#stroke0_post" transform="translate(84.5226 871.896) scale(0.249108) rotate(20.8576)" />
-        <use xlinkHref="#stroke0_post" transform="translate(72.514 943.879) scale(0.275691) rotate(-114.792)" />
-        <use xlinkHref="#stroke0_post" transform="translate(158.105 720.724) scale(0.466517) rotate(87.6585)" />
-        <use xlinkHref="#stroke0_post" transform="translate(22.5014 768.821) scale(0.23862) rotate(-74.8901)" />
-        <use xlinkHref="#stroke0_post" transform="translate(66.2091 753.174) scale(0.255709) rotate(-127.676)" />
-        <use xlinkHref="#stroke0_post" transform="translate(169.155 654.314) scale(0.37885) rotate(152.28)" />
-        <use xlinkHref="#stroke0_post" transform="translate(-4.37618 535.526) scale(0.394866) rotate(-34.1506)" />
-        <use xlinkHref="#stroke0_post" transform="translate(6.21873 428.891) scale(0.483246) rotate(-23.9808)" />
-        <use xlinkHref="#stroke0_post" transform="translate(124.027 465.506) scale(0.271396) rotate(-110.67)" />
-        <use xlinkHref="#stroke0_post" transform="translate(199.609 461.001) scale(0.485746) rotate(-138.575)" />
-        <use xlinkHref="#stroke0_post" transform="translate(303.611 314.188) scale(0.295929) rotate(163.547)" />
-        <use xlinkHref="#stroke0_post" transform="translate(265.89 135.432) scale(0.393976) rotate(33.953)" />
-        <use xlinkHref="#stroke0_post" transform="translate(270.218 125.522) scale(0.382283) rotate(-6.46612)" />
-        <use xlinkHref="#stroke0_post" transform="matrix(0.142535 -0.36782 0.36782 0.142535 321.093 184.586)" />
-        <use xlinkHref="#stroke0_post" transform="translate(466.734 -24.969) scale(0.534995) rotate(34.0829)" />
-        <use xlinkHref="#stroke0_post" transform="translate(599.96 38.3436) scale(0.228176) rotate(82.7933)" />
-        <use xlinkHref="#stroke0_post" transform="translate(629.477 -22.1174) scale(0.379183) rotate(48.9055)" />
-        <use xlinkHref="#stroke0_post" transform="translate(707.28 129.112) scale(0.264245) rotate(-151.737)" />
-        <use xlinkHref="#stroke0_post" transform="translate(776.369 25.6734) scale(0.228048) rotate(91.2008)" />
-        <use xlinkHref="#stroke0_post" transform="translate(739.766 106.758) scale(0.223522) rotate(-87.7207)" />
-        <use xlinkHref="#stroke0_post" transform="translate(764.058 42.9692) scale(0.297873) rotate(-18.5026)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1025.18 123.378) scale(0.490442) rotate(150.065)" />
-        <use xlinkHref="#stroke0_post" transform="translate(951.573 189.511) scale(0.29873) rotate(-112.371)" />
-        <use xlinkHref="#stroke0_post" transform="translate(919.547 148.623) scale(0.530684) rotate(-40.1427)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1133 135.711) scale(0.277643) rotate(58.9931)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1233.22 248.791) scale(0.295403) rotate(142.763)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1093.5 303.525) scale(0.477658) rotate(-48.288)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1155.27 337.506) scale(0.466324) rotate(-27.9212)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1281.78 367.903) scale(0.278965) rotate(28.8506)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1223.07 465.058) scale(0.447965) rotate(-25.561)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1364.73 501.502) scale(0.28133) rotate(59.1269)" />
-        <use xlinkHref="#stroke0_post" transform="matrix(0.32478 -0.165179 0.165179 0.32478 1272.49 605.519)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1312.06 618.326) scale(0.421061) rotate(16.0791)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1348.88 836.371) scale(0.248843) rotate(-122.91)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1373.97 769.372) scale(0.222028) rotate(66.0627)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1392.96 806.84) scale(0.339738) rotate(81.8713)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1271.73 905.953) scale(0.237843) rotate(-20.6227)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1225.72 1059.96) scale(0.415434) rotate(-87.3626)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1321.58 1012.36) scale(0.246104) rotate(102.355)" />
-        <use xlinkHref="#stroke0_post" transform="translate(1344.83 1039.17) scale(0.494025) rotate(107.801)" />
-        <defs>
-          <g id="stroke0_post">
-            <path d={svgPaths.p2af38b80} fill="#8149E4" fillOpacity="0.5" />
-          </g>
-        </defs>
-      </svg>
-    </div>
-  );
-}
 
 interface PostOnboardingProps {
   userInitials?: string;
@@ -133,7 +60,7 @@ export function PostOnboarding({ userInitials, onComplete }: PostOnboardingProps
   return (
     <div className="bg-[#0f0f0f] min-h-screen w-full flex flex-col relative overflow-hidden">
       {/* Background Circle */}
-      <CircleBackground />
+      <BackgroundDecor />
 
       {/* Nav Bar */}
       <NavBar userInitials={userInitials} />

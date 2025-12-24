@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'motion/react';
 import svgPaths from "@/components/ui/icons/signup-wave-svg";
 import imgWaveCircleWhite200X2001 from "figma:asset/0a4654ea4398cf8f615304c83010e8a0c575f917.png";
 
@@ -131,7 +132,12 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
 
       {/* Left Section */}
       <div className="w-full lg:w-1/2 flex items-center justify-center lg:justify-end px-6 py-8 lg:py-0 lg:pr-8 xl:pr-16 2xl:pr-20">
-        <div className="w-full max-w-[700px] lg:max-w-none lg:w-auto flex flex-col gap-[14px] lg:gap-[16px] xl:gap-[22px] 2xl:gap-[30px] items-center lg:items-end text-center lg:text-right">
+        <motion.div
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          className="w-full max-w-[700px] lg:max-w-none lg:w-auto flex flex-col gap-[14px] lg:gap-[16px] xl:gap-[22px] 2xl:gap-[30px] items-center lg:items-end text-center lg:text-right"
+        >
           <div className="relative shrink-0 w-[36px] h-[36px] lg:w-[40px] lg:h-[40px] xl:w-[48px] xl:h-[48px] 2xl:w-[60px] 2xl:h-[60px]">
             <img
               alt="WorkApply Logo"
@@ -142,7 +148,7 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
           <p className="font-['Pavanam',sans-serif] text-white text-[24px] sm:text-[28px] lg:text-[30px] xl:text-[38px] 2xl:text-[52px] leading-[1.0]">
             We're happy you're joining us!
           </p>
-        </div>
+        </motion.div>
       </div>
 
       {/* Right Section - Sign Up Form */}
