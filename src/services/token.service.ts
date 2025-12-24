@@ -8,9 +8,9 @@ class TokenService {
     return Cookies.get("accessToken");
   };
   saveLocalAccessToken = (token: string) => {
-    Cookies.set("accessToken", token, { 
+    Cookies.set("accessToken", token, {
       sameSite: "lax",
-      secure: process.env.NODE_ENV === 'production',
+      secure: import.meta.env.PROD,
       path: '/',
       expires: 1 // 1 day
     });

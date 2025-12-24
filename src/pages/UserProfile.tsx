@@ -2,97 +2,16 @@ import React, { useState } from 'react';
 import svgPaths from "@/components/ui/icons/user-profile-svg";
 import svgPathsDashboard from "@/components/ui/icons/dashboard-svg";
 import svgPathsSubscription from "@/components/ui/icons/subscription-svg";
-import imgLogo from "figma:asset/183455f9c95614951c915b43688a9887b44c6a17.png";
 import imgProfile from "figma:asset/0ac032a0fe674838ee325c4730b1ba299bfc7fcd.png";
 import imgWaveCircleWhite from "figma:asset/85ef7a7284b26057657fc5cbaeefab0d1429915e.png";
-
-// Purple Scatter Background (for left sidebar)
-function ScatterBackground() {
-  return (
-    <div className="absolute left-0 bottom-0 w-[400px] h-[400px] pointer-events-none opacity-60">
-      <svg className="block w-full h-full" viewBox="0 0 1474 1457" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d={svgPathsDashboard.p3df66900} fill="#8149E4" fillOpacity="0.6" />
-      </svg>
-    </div>
-  );
-}
-
-// Navigation Bar
-function TopNavBar({ currentTab, onTabChange, onProfileClick }: { currentTab: 'dashboard' | 'queue' | 'applications'; onTabChange: (tab: 'dashboard' | 'queue' | 'applications') => void; onProfileClick: () => void }) {
-  return (
-    <div className="bg-[#0f0f0f] w-full flex h-[56px] items-center justify-between px-[20px] sm:px-[40px] lg:px-[80px] py-0 border-b border-[#1a1a1a] shrink-0">
-      {/* Logo */}
-      <div className="content-stretch flex gap-[10px] h-full items-center p-[10px] relative shrink-0">
-        <div className="relative shrink-0 size-[40px]">
-          <img alt="WorkApply Logo" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src={imgLogo} />
-        </div>
-        <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-nowrap text-white">
-          <p className="leading-[18px]">WorkApply</p>
-        </div>
-      </div>
-
-      {/* Menu + Icons */}
-      <div className="content-stretch flex gap-[40px] lg:gap-[100px] h-full items-center justify-end relative shrink-0">
-        {/* Menu Options */}
-        <div className="hidden md:flex content-stretch gap-[24px] lg:gap-[40px] h-full items-center relative shrink-0">
-          <div
-            className="content-stretch flex gap-[4px] h-full items-center justify-center relative shrink-0 cursor-pointer"
-            onClick={() => onTabChange('dashboard')}
-          >
-            {currentTab === 'dashboard' && (
-              <div aria-hidden="true" className="absolute border-[#611dcd] border-[0px_0px_4px] border-solid inset-0 pointer-events-none" />
-            )}
-            <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-nowrap text-white">
-              <p className="leading-[18px]">Dashboard</p>
-            </div>
-          </div>
-          <div
-            className="content-stretch flex gap-[4px] h-full items-center justify-center relative shrink-0 cursor-pointer"
-            onClick={() => onTabChange('queue')}
-          >
-            {currentTab === 'queue' && (
-              <div aria-hidden="true" className="absolute border-[#611dcd] border-[0px_0px_4px] border-solid inset-0 pointer-events-none" />
-            )}
-            <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-nowrap text-white">
-              <p className="leading-[18px]">Job Queue</p>
-            </div>
-          </div>
-          <div
-            className="content-stretch flex gap-[4px] h-full items-center justify-center relative shrink-0 cursor-pointer"
-            onClick={() => onTabChange('applications')}
-          >
-            {currentTab === 'applications' && (
-              <div aria-hidden="true" className="absolute border-[#611dcd] border-[0px_0px_4px] border-solid inset-0 pointer-events-none" />
-            )}
-            <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-nowrap text-white">
-              <p className="leading-[18px]">Applications</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Notif + Profile */}
-        <div className="content-stretch flex gap-[24px] lg:gap-[36px] items-center relative shrink-0">
-          <div className="relative shrink-0 size-[28px] cursor-pointer">
-            <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 28 28">
-              <path d={svgPathsDashboard.p3d8d6500} fill="#FAF9F6" />
-            </svg>
-          </div>
-          <div className="relative shrink-0 size-[28px] cursor-pointer" onClick={onProfileClick}>
-            <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 28 28">
-              <path d={svgPathsDashboard.pd664880} fill="#FAF9F6" />
-            </svg>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { BackgroundDecor } from "@/components/ui/BackgroundDecor";
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
 
 // Left Sidebar - Profile Section
 function LeftSidebar() {
   return (
-    <div className="w-full lg:w-[311px] bg-[#0f0f0f] flex flex-col relative overflow-y-auto shrink-0">
-      <ScatterBackground />
+    <div className="w-full lg:w-[311px] bg-[#0f0f0f] flex flex-col relative overflow-y-auto shrink-0 border-r border-[#1a1a1a]">
+      <BackgroundDecor />
 
       <div className="relative z-10 p-[20px] lg:p-[24px] flex flex-col gap-[24px]">
         {/* Profile Card */}
@@ -518,17 +437,7 @@ function RightContent() {
 function SubscriptionContent() {
   return (
     <div className="w-full relative">
-      {/* Purple scatter particles background */}
-      <div className="absolute left-[10%] top-[-200px] w-[400px] h-[400px] pointer-events-none opacity-50">
-        <svg className="block w-full h-full" viewBox="0 0 1474 1457" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d={svgPathsDashboard.p3df66900} fill="#8149E4" fillOpacity="0.4" />
-        </svg>
-      </div>
-      <div className="absolute right-[10%] top-[-100px] w-[400px] h-[400px] pointer-events-none opacity-50">
-        <svg className="block w-full h-full" viewBox="0 0 1474 1457" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d={svgPathsDashboard.p3df66900} fill="#8149E4" fillOpacity="0.4" />
-        </svg>
-      </div>
+      <BackgroundDecor />
 
       <div className="relative z-10">
         {/* Title Section */}
@@ -688,22 +597,8 @@ function SubscriptionContent() {
 }
 
 export function UserProfile({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'queue' | 'applications' | 'profile') => void }) {
-  const handleTabChange = (tab: 'dashboard' | 'queue' | 'applications') => {
-    if (onNavigate) {
-      onNavigate(tab);
-    }
-  };
-
-  const handleProfileClick = () => {
-    // Already on profile page, do nothing
-  };
-
   return (
-    <div className="bg-[#0f0f0f] min-h-screen w-full flex flex-col relative overflow-hidden">
-      {/* Top Navigation */}
-      <TopNavBar currentTab="dashboard" onTabChange={handleTabChange} onProfileClick={handleProfileClick} />
-
-      {/* Main Content Area */}
+    <DashboardLayout currentTab="profile" onNavigate={onNavigate} showBackground={false} contentScrollable={false}>
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
         {/* Left Sidebar */}
         <LeftSidebar />
@@ -711,6 +606,6 @@ export function UserProfile({ onNavigate }: { onNavigate?: (page: 'dashboard' | 
         {/* Right Content */}
         <RightContent />
       </div>
-    </div>
+    </DashboardLayout>
   );
 }

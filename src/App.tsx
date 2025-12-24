@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { LoginPage } from './pages/Login';
 import { SignUpPage } from './pages/Signup';
 import { UploadResumePage } from './pages/UploadResume';
@@ -12,9 +12,11 @@ import { PostOnboarding } from './pages/PostOnboarding';
 import { Dashboard } from './pages/Dashboard';
 import { JobQueue } from './pages/JobQueue';
 import { UserProfile } from './pages/UserProfile';
+import { ProtectedRoute, PublicRoute } from './components/shared/AuthGuard';
+import { useState } from 'react';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'login' | 'signup' | 'upload' | 'onboarding' | 'q1' | 'q2' | 'q3' | 'q4' | 'q5' | 'complete' | 'dashboard' | 'queue' | 'applications' | 'profile'>('login');
+  const navigate = useNavigate();
   const [onboardingAnswers, setOnboardingAnswers] = useState<{
     q1?: string;
     q2?: string;
@@ -25,89 +27,56 @@ export default function App() {
 
   const handleQ1Continue = (answer: string) => {
     setOnboardingAnswers({ ...onboardingAnswers, q1: answer });
-    setCurrentPage('q2');
+    navigate('/onboarding/q2');
   };
 
   const handleQ2Continue = (answer: string) => {
     setOnboardingAnswers({ ...onboardingAnswers, q2: answer });
-    setCurrentPage('q3');
+    navigate('/onboarding/q3');
   };
 
   const handleQ3Continue = (min: number, max: number) => {
     setOnboardingAnswers({ ...onboardingAnswers, q3: { min, max } });
-    setCurrentPage('q4');
+    navigate('/onboarding/q4');
   };
 
   const handleQ4Continue = (selectedTitles: string[]) => {
     setOnboardingAnswers({ ...onboardingAnswers, q4: selectedTitles });
-    setCurrentPage('q5');
+    navigate('/onboarding/q5');
   };
 
   const handleQ5Continue = (experience: string) => {
     setOnboardingAnswers({ ...onboardingAnswers, q5: experience });
     console.log('Onboarding complete!', { ...onboardingAnswers, q5: experience });
-    setCurrentPage('complete');
+    navigate('/complete');
   };
 
   return (
-    <>
-      {currentPage === 'login' && (
-        <LoginPage onSignUpClick={() => setCurrentPage('signup')} />
-      )}
-      {currentPage === 'signup' && (
-        <SignUpPage
-          onSignInClick={() => setCurrentPage('login')}
-          onSignUpComplete={() => setCurrentPage('upload')}
-        />
-      )}
-      {currentPage === 'upload' && (
-        <UploadResumePage onUploadComplete={() => setCurrentPage('onboarding')} />
-      )}
-      {currentPage === 'onboarding' && (
-        <OnboardingStepPage onContinue={() => setCurrentPage('q1')} />
-      )}
-      {currentPage === 'q1' && (
-        <OnboardingQuestion1
-          onBack={() => setCurrentPage('onboarding')}
-          onContinue={handleQ1Continue}
-        />
-      )}
-      {currentPage === 'q2' && (
-        <OnboardingQuestion2
-          onBack={() => setCurrentPage('q1')}
-          onContinue={handleQ2Continue}
-        />
-      )}
-      {currentPage === 'q3' && (
-        <OnboardingQuestion3
-          onBack={() => setCurrentPage('q2')}
-          onContinue={handleQ3Continue}
-        />
-      )}
-      {currentPage === 'q4' && (
-        <OnboardingQuestion4
-          onBack={() => setCurrentPage('q3')}
-          onContinue={handleQ4Continue}
-        />
-      )}
-      {currentPage === 'q5' && (
-        <OnboardingQuestion5
-          onBack={() => setCurrentPage('q4')}
-          onContinue={handleQ5Continue}
-        />
-      )}
-      {currentPage === 'complete' && (
-        <PostOnboarding onComplete={() => setCurrentPage('dashboard')} />
-      )}
-      {currentPage === 'dashboard' && (
-        <Dashboard onNavigate={(page) => setCurrentPage(page)} />
-      )}
-      {currentPage === 'queue' && (
-        <JobQueue onNavigate={(page) => setCurrentPage(page)} />
-      )}
-      {currentPage === 'profile' && (
-        <UserProfile onNavigate={(page) => setCurrentPage(page)} />
-      )}
-    </>
+    <Routes>
+      {/* Public Routes */}
+      <Route element={<PublicRoute />}>
+        <Route path="/login" element={<LoginPage onSignUpClick={() => navigate('/signup')} />} />
+        <Route path="/signup" element={<SignUpPage onSignInClick={() => navigate('/login')} onSignUpComplete={() => navigate('/upload')} />} />
+      </Route>
+
+      {/* Protected Routes */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/upload" element={<UploadResumePage onUploadComplete={() => navigate('/onboarding')} />} />
+        <Route path="/onboarding" element={<OnboardingStepPage onContinue={() => navigate('/onboarding/q1')} />} />
+        <Route path="/onboarding/q1" element={<OnboardingQuestion1 onBack={() => navigate('/onboarding')} onContinue={handleQ1Continue} />} />
+        <Route path="/onboarding/q2" element={<OnboardingQuestion2 onBack={() => navigate('/onboarding/q1')} onContinue={handleQ2Continue} />} />
+        <Route path="/onboarding/q3" element={<OnboardingQuestion3 onBack={() => navigate('/onboarding/q2')} onContinue={handleQ3Continue} />} />
+        <Route path="/onboarding/q4" element={<OnboardingQuestion4 onBack={() => navigate('/onboarding/q3')} onContinue={handleQ4Continue} />} />
+        <Route path="/onboarding/q5" element={<OnboardingQuestion5 onBack={() => navigate('/onboarding/q4')} onContinue={handleQ5Continue} />} />
+        <Route path="/complete" element={<PostOnboarding onComplete={() => navigate('/dashboard')} />} />
+        <Route path="/dashboard" element={<Dashboard onNavigate={(page) => navigate(`/${page}`)} />} />
+        <Route path="/queue" element={<JobQueue onNavigate={(page) => navigate(`/${page}`)} />} />
+        <Route path="/profile" element={<UserProfile onNavigate={(page) => navigate(`/${page}`)} />} />
+      </Route>
+
+      {/* Default Redirect */}
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+    </Routes>
   );
 }

@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import svgPaths from "@/components/ui/icons/signup-wave-svg";
 import imgWaveCircleWhite200X2001 from "figma:asset/0a4654ea4398cf8f615304c83010e8a0c575f917.png";
+import AuthService from '@/services/auth.service';
+import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 function Wave() {
   return (
@@ -88,17 +91,21 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  const { useHandleRegisterUser } = AuthService();
+  const signupMutation = useHandleRegisterUser();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert('Passwords do not match!');
+      toast.error('Passwords do not match!');
       return;
     }
-    console.log('Sign up attempt:', { firstName, lastName, email, password });
-    // Call the onSignUpComplete callback to navigate to upload page
-    if (onSignUpComplete) {
-      onSignUpComplete();
-    }
+
+    signupMutation.mutate({
+      name: `${firstName} ${lastName}`,
+      email,
+      password,
+    });
   };
 
   return (
@@ -170,9 +177,10 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
                   <input
                     type="text"
                     value={firstName}
+                    disabled={signupMutation.isPending}
                     onChange={(e) => setFirstName(e.target.value)}
                     placeholder="First Name"
-                    className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px] lg:text-[17px] xl:text-[20px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[10px] py-[8px] lg:py-[9px] xl:py-[10px] 2xl:py-[12px] outline-none placeholder:text-[#9ba1a5]"
+                    className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px] lg:text-[17px] xl:text-[20px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[10px] py-[8px] lg:py-[9px] xl:py-[10px] 2xl:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
                     required
                   />
                 </div>
@@ -183,9 +191,10 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
                   <input
                     type="text"
                     value={lastName}
+                    disabled={signupMutation.isPending}
                     onChange={(e) => setLastName(e.target.value)}
                     placeholder="Last Name"
-                    className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px] lg:text-[17px] xl:text-[20px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[10px] py-[8px] lg:py-[9px] xl:py-[10px] 2xl:py-[12px] outline-none placeholder:text-[#9ba1a5]"
+                    className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px] lg:text-[17px] xl:text-[20px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[10px] py-[8px] lg:py-[9px] xl:py-[10px] 2xl:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
                     required
                   />
                 </div>
@@ -197,9 +206,10 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
                 <input
                   type="email"
                   value={email}
+                  disabled={signupMutation.isPending}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email"
-                  className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px] lg:text-[17px] xl:text-[20px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[10px] py-[8px] lg:py-[9px] xl:py-[10px] 2xl:py-[12px] outline-none placeholder:text-[#9ba1a5]"
+                  className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px] lg:text-[17px] xl:text-[20px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[10px] py-[8px] lg:py-[9px] xl:py-[10px] 2xl:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
                   required
                 />
               </div>
@@ -210,9 +220,10 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
                 <input
                   type="password"
                   value={password}
+                  disabled={signupMutation.isPending}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
-                  className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px] lg:text-[17px] xl:text-[20px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[10px] py-[8px] lg:py-[9px] xl:py-[10px] 2xl:py-[12px] outline-none placeholder:text-[#9ba1a5]"
+                  className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px] lg:text-[17px] xl:text-[20px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[10px] py-[8px] lg:py-[9px] xl:py-[10px] 2xl:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
                   required
                 />
               </div>
@@ -223,9 +234,10 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
                 <input
                   type="password"
                   value={confirmPassword}
+                  disabled={signupMutation.isPending}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm Password"
-                  className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px] lg:text-[17px] xl:text-[20px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[10px] py-[8px] lg:py-[9px] xl:py-[10px] 2xl:py-[12px] outline-none placeholder:text-[#9ba1a5]"
+                  className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px] lg:text-[17px] xl:text-[20px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[10px] py-[8px] lg:py-[9px] xl:py-[10px] 2xl:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
                   required
                 />
               </div>
@@ -247,10 +259,12 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
             {/* Create Account Button */}
             <button
               type="submit"
-              className="bg-[#faf9f6] rounded-[35px] w-full py-[6px] lg:py-[6px] xl:py-[7px] 2xl:py-[8px] px-[12px] hover:bg-opacity-90 transition-opacity"
+              disabled={signupMutation.isPending}
+              className="bg-[#faf9f6] rounded-[35px] w-full py-[6px] lg:py-[6px] xl:py-[7px] 2xl:py-[8px] px-[12px] hover:bg-opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
             >
+              {signupMutation.isPending && <Loader2 className="animate-spin text-black" size={24} />}
               <span className="font-['Pavanam',sans-serif] text-black text-[22px] lg:text-[24px] xl:text-[30px] 2xl:text-[40px] leading-[1.2]">
-                Create Account
+                {signupMutation.isPending ? 'Creating Account...' : 'Create Account'}
               </span>
             </button>
 
@@ -262,7 +276,8 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
               <button
                 type="button"
                 onClick={onSignInClick}
-                className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[12px] lg:text-[13px] xl:text-[15px] 2xl:text-[20px] leading-[1.2] border-b-2 border-transparent hover:border-white transition-colors pb-[3px]"
+                disabled={signupMutation.isPending}
+                className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[12px] lg:text-[13px] xl:text-[15px] 2xl:text-[20px] leading-[1.2] border-b-2 border-transparent hover:border-white transition-colors pb-[3px] disabled:opacity-50"
               >
                 Sign in here.
               </button>

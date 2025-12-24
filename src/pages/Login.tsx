@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import svgPaths from "@/components/ui/icons/login-wave-svg";
 import imgWaveCircleWhite200X2001 from "figma:asset/0a4654ea4398cf8f615304c83010e8a0c575f917.png";
+import AuthService from '@/services/auth.service';
+import { Loader2 } from 'lucide-react';
 
 function Wave() {
   return (
@@ -84,9 +86,12 @@ export function LoginPage({ onSignUpClick }: LoginPageProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const { useHandleLogin } = AuthService();
+  const loginMutation = useHandleLogin();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login attempt:', { email, password });
+    loginMutation.mutate({ email, password });
   };
 
   return (
@@ -120,7 +125,7 @@ export function LoginPage({ onSignUpClick }: LoginPageProps) {
 
       {/* Left Section */}
       <div className="w-full lg:w-1/2 flex items-center justify-center lg:justify-end px-6 py-8 lg:py-0 lg:pr-8 xl:pr-16 2xl:pr-20">
-        <motion.div 
+        <motion.div
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
@@ -161,9 +166,10 @@ export function LoginPage({ onSignUpClick }: LoginPageProps) {
                 <input
                   type="email"
                   value={email}
+                  disabled={loginMutation.isPending}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email"
-                  className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[12px] py-[10px] lg:py-[12px] outline-none placeholder:text-[#9ba1a5]"
+                  className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[12px] py-[10px] lg:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
                   required
                 />
               </div>
@@ -174,9 +180,10 @@ export function LoginPage({ onSignUpClick }: LoginPageProps) {
                 <input
                   type="password"
                   value={password}
+                  disabled={loginMutation.isPending}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
-                  className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[12px] py-[10px] lg:py-[12px] outline-none placeholder:text-[#9ba1a5]"
+                  className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[12px] py-[10px] lg:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
                   required
                 />
               </div>
@@ -195,10 +202,12 @@ export function LoginPage({ onSignUpClick }: LoginPageProps) {
             {/* Login Button */}
             <button
               type="submit"
-              className="bg-[#faf9f6] rounded-[35px] w-full py-[6px] lg:py-[7px] xl:py-[8px] px-[12px] hover:bg-opacity-90 transition-opacity"
+              disabled={loginMutation.isPending}
+              className="bg-[#faf9f6] rounded-[35px] w-full py-[6px] lg:py-[7px] xl:py-[8px] px-[12px] hover:bg-opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
             >
+              {loginMutation.isPending && <Loader2 className="animate-spin text-black" size={24} />}
               <span className="font-['Pavanam',sans-serif] text-black text-[24px] lg:text-[28px] xl:text-[34px] 2xl:text-[40px] leading-[1.2]">
-                Login
+                {loginMutation.isPending ? 'Signing in...' : 'Login'}
               </span>
             </button>
 
@@ -210,7 +219,8 @@ export function LoginPage({ onSignUpClick }: LoginPageProps) {
               <button
                 type="button"
                 onClick={onSignUpClick}
-                className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[14px] lg:text-[16px] xl:text-[18px] 2xl:text-[20px] leading-[1.2] border-b-2 border-transparent hover:border-white transition-colors pb-[3px]"
+                disabled={loginMutation.isPending}
+                className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[14px] lg:text-[16px] xl:text-[18px] 2xl:text-[20px] leading-[1.2] border-b-2 border-transparent hover:border-white transition-colors pb-[3px] disabled:opacity-50"
               >
                 Sign up here.
               </button>

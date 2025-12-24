@@ -1,18 +1,8 @@
 import React, { useState } from 'react';
 import svgPaths from "@/components/ui/icons/job-queue-svg";
-import svgPathsDashboard from "@/components/ui/icons/dashboard-svg";
-import imgLogo from "figma:asset/183455f9c95614951c915b43688a9887b44c6a17.png";
+import { BackgroundDecor } from "@/components/ui/BackgroundDecor";
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
 
-// Purple Scatter Background (for right panel)
-function ScatterBackground() {
-  return (
-    <div className="absolute right-0 top-[15%] w-[900px] h-[900px] pointer-events-none opacity-40">
-      <svg className="block w-full h-full" viewBox="0 0 1474 1457" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d={svgPathsDashboard.p3df66900} fill="#8149E4" fillOpacity="0.4" />
-      </svg>
-    </div>
-  );
-}
 
 // Toggle Component
 function Toggle({ isOn, onToggle }: { isOn: boolean; onToggle: () => void }) {
@@ -51,7 +41,9 @@ function AutoApplyBanner({ isOn, onToggle }: { isOn: boolean; onToggle: () => vo
     <div className="bg-black relative rounded-[4px] shrink-0 w-full">
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex gap-[12px] items-center p-[16px] relative w-full">
-          <Toggle isOn={isOn} onToggle={onToggle} />
+          <div className="flex-none">
+            <Toggle isOn={isOn} onToggle={onToggle} />
+          </div>
           <div className="basis-0 content-stretch flex flex-col font-['Pavanam',sans-serif] gap-[4px] grow items-start justify-center leading-[0] min-h-px min-w-px not-italic relative shrink-0">
             <div className="flex flex-col justify-center relative shrink-0 text-[#faf9f6] text-[16px] w-full">
               <p className="leading-[18px]">Auto-Apply is currently {isOn ? 'ON' : 'OFF'}.</p>
@@ -161,7 +153,7 @@ function JobCardSidebar({ job, isSelected, onClick }: JobCardProps) {
 // Job Details Panel (Right Side)
 function JobDetailsPanel({ job }: { job: Job }) {
   return (
-    <div className="flex-1 overflow-y-auto px-[40px] lg:px-[80px] py-[40px] lg:py-[60px] relative">
+    <div className="px-[40px] lg:px-[80px] py-[40px] lg:py-[60px] relative">
       <div className="max-w-[800px]">
         {/* Company Logo and Title */}
         <div className="mb-[40px]">
@@ -251,88 +243,6 @@ function JobDetailsPanel({ job }: { job: Job }) {
               </li>
             ))}
           </ul>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Navigation Bar
-function TopNavBar({ currentTab, onTabChange, onProfileClick }: { currentTab: 'dashboard' | 'queue' | 'applications' | 'profile'; onTabChange: (tab: 'dashboard' | 'queue' | 'applications' | 'profile') => void; onProfileClick: () => void }) {
-  return (
-    <div className="bg-[#0f0f0f] w-full flex h-[56px] items-center justify-between px-[20px] sm:px-[40px] lg:px-[80px] py-0 border-b border-[#1a1a1a] shrink-0">
-      {/* Logo */}
-      <div className="content-stretch flex gap-[10px] h-full items-center p-[10px] relative shrink-0">
-        <div className="relative shrink-0 size-[40px]">
-          <img alt="WorkApply Logo" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src={imgLogo} />
-        </div>
-        <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-nowrap text-white">
-          <p className="leading-[18px]">WorkApply</p>
-        </div>
-      </div>
-
-      {/* Menu + Icons */}
-      <div className="content-stretch flex gap-[40px] lg:gap-[100px] h-full items-center justify-end relative shrink-0">
-        {/* Menu Options */}
-        <div className="hidden md:flex content-stretch gap-[24px] lg:gap-[40px] h-full items-center relative shrink-0">
-          <div
-            className="content-stretch flex gap-[4px] h-full items-center justify-center relative shrink-0 cursor-pointer"
-            onClick={() => onTabChange('dashboard')}
-          >
-            {currentTab === 'dashboard' && (
-              <div aria-hidden="true" className="absolute border-[#611dcd] border-[0px_0px_4px] border-solid inset-0 pointer-events-none" />
-            )}
-            <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-nowrap text-white">
-              <p className="leading-[18px]">Dashboard</p>
-            </div>
-          </div>
-          <div
-            className="content-stretch flex gap-[4px] h-full items-center justify-center relative shrink-0 cursor-pointer"
-            onClick={() => onTabChange('queue')}
-          >
-            {currentTab === 'queue' && (
-              <div aria-hidden="true" className="absolute border-[#611dcd] border-[0px_0px_4px] border-solid inset-0 pointer-events-none" />
-            )}
-            <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-nowrap text-white">
-              <p className="leading-[18px]">Job Queue</p>
-            </div>
-          </div>
-          <div
-            className="content-stretch flex gap-[4px] h-full items-center justify-center relative shrink-0 cursor-pointer"
-            onClick={() => onTabChange('applications')}
-          >
-            {currentTab === 'applications' && (
-              <div aria-hidden="true" className="absolute border-[#611dcd] border-[0px_0px_4px] border-solid inset-0 pointer-events-none" />
-            )}
-            <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-nowrap text-white">
-              <p className="leading-[18px]">Applications</p>
-            </div>
-          </div>
-          <div
-            className="content-stretch flex gap-[4px] h-full items-center justify-center relative shrink-0 cursor-pointer"
-            onClick={() => onTabChange('profile')}
-          >
-            {currentTab === 'profile' && (
-              <div aria-hidden="true" className="absolute border-[#611dcd] border-[0px_0px_4px] border-solid inset-0 pointer-events-none" />
-            )}
-            <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-center text-nowrap text-white">
-              <p className="leading-[18px]">Profile</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Notif + Profile */}
-        <div className="content-stretch flex gap-[24px] lg:gap-[36px] items-center relative shrink-0">
-          <div className="relative shrink-0 size-[28px] cursor-pointer">
-            <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 28 28">
-              <path d={svgPathsDashboard.p3d8d6500} fill="#FAF9F6" />
-            </svg>
-          </div>
-          <div className="relative shrink-0 size-[28px] cursor-pointer" onClick={onProfileClick}>
-            <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 28 28">
-              <path d={svgPathsDashboard.pd664880} fill="#FAF9F6" />
-            </svg>
-          </div>
         </div>
       </div>
     </div>
@@ -519,21 +429,11 @@ export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'qu
 
   const selectedJob = jobs.find(j => j.id === selectedJobId) || jobs[0];
 
-  const handleTabChange = (tab: 'dashboard' | 'queue' | 'applications' | 'profile') => {
-    if (onNavigate) {
-      onNavigate(tab);
-    }
-  };
-
   return (
-    <div className="bg-[#0f0f0f] min-h-screen w-full flex flex-col relative overflow-hidden">
-      {/* Top Navigation */}
-      <TopNavBar currentTab="queue" onTabChange={handleTabChange} onProfileClick={() => console.log('Profile clicked')} />
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+    <DashboardLayout currentTab="queue" onNavigate={onNavigate} showBackground={false} contentScrollable={false}>
+      <div className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden relative">
         {/* Left Sidebar - Job List */}
-        <div className="w-full lg:w-[384px] bg-[#0f0f0f] border-r border-[#1a1a1a] flex flex-col shrink-0 h-[50vh] lg:h-auto overflow-hidden">
+        <div className="w-full lg:w-[384px] bg-[#0f0f0f] border-r border-[#1a1a1a] flex flex-col shrink-0 h-[50vh] lg:h-full overflow-hidden">
           {/* Auto-Apply Banner */}
           <div className="p-[16px] border-b border-[#1a1a1a] shrink-0">
             <AutoApplyBanner isOn={autoApplyOn} onToggle={() => setAutoApplyOn(!autoApplyOn)} />
@@ -553,13 +453,13 @@ export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'qu
         </div>
 
         {/* Right Panel - Job Details - Scrollable */}
-        <div className="flex-1 relative overflow-hidden">
-          <ScatterBackground />
+        <div className="flex-1 relative h-full overflow-hidden">
+          <BackgroundDecor />
           <div className="h-full overflow-y-auto relative z-10">
             <JobDetailsPanel job={selectedJob} />
           </div>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }

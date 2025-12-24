@@ -1,6 +1,6 @@
 
 export const LOCATION_FILTERS = [];
-export const API_BASEURL = process.env.NEXT_PUBLIC_API_BASEURL;
+export const API_BASEURL = import.meta.env.VITE_API_BASEURL;
 
 export const PUBLIC_ENDPOINTS = ["/api/v1/users/register", "/api/v1/auth"];
 
