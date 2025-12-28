@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import svgPaths from "@/components/ui/icons/user-profile-svg";
 import svgPathsDashboard from "@/components/ui/icons/dashboard-svg";
 import svgPathsSubscription from "@/components/ui/icons/subscription-svg";
@@ -6,6 +7,8 @@ import imgProfile from "figma:asset/0ac032a0fe674838ee325c4730b1ba299bfc7fcd.png
 import imgWaveCircleWhite from "figma:asset/85ef7a7284b26057657fc5cbaeefab0d1429915e.png";
 import { BackgroundDecor } from "@/components/ui/BackgroundDecor";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import SubscriptionService from '@/services/subscription.service';
+import UserService from '@/services/user.service';
 
 // Left Sidebar - Profile Section
 function LeftSidebar() {
@@ -213,6 +216,7 @@ function EditButton() {
 // Right Content Area
 function RightContent() {
   const [activeTab, setActiveTab] = useState<'profile' | 'subscription'>('profile');
+  const navigate = useNavigate();
 
   return (
     <div className="flex-1 overflow-y-auto relative bg-[#0f0f0f]">
@@ -255,7 +259,7 @@ function RightContent() {
         </div>
 
         {/* Tab Content */}
-        {activeTab === 'profile' && (
+        {activeTab === 'profile' ? (
           <div className="flex flex-col gap-[32px] lg:gap-[40px] max-w-[1000px] mx-auto">
             {/* Job Preferences */}
             <div className="bg-[#1a1a1a] rounded-[4px] p-[20px] lg:p-[32px]">
@@ -424,173 +428,53 @@ function RightContent() {
               </div>
             </div>
           </div>
-        )}
-
-        {activeTab === 'subscription' && (
-          <SubscriptionContent />
+        ) : (
+          <SubscriptionDetails />
         )}
       </div>
     </div>
   );
 }
 
-function SubscriptionContent() {
+function SubscriptionDetails() {
+  const navigate = useNavigate();
+  const { useFetchCurrentSubscription } = UserService();
+  const { data: subscription } = useFetchCurrentSubscription();
+
+  if (!subscription) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] relative px-[20px]">
+        <div className="relative bg-[rgba(26,26,26,0.7)] rounded-[4px] p-[32px] lg:p-[48px] max-w-[800px] w-full flex flex-col items-center text-center gap-[32px] z-10 overflow-hidden">
+          <div aria-hidden="true" className="absolute border-[#9ba1a5] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
+
+          <div className="flex flex-col gap-[16px] items-center relative z-10">
+            <p className="font-['Pavanam',sans-serif] leading-[32px] lg:leading-[40px] text-[24px] lg:text-[32px] text-white">
+              Looks like you're still on a free plan! Upgrade to unlock premium tools like Auto Apply and get the most out of WorkApply.
+            </p>
+          </div>
+
+          <button
+            onClick={() => navigate('/subscriptions')}
+            className="bg-[#faf9f6] rounded-[35px] px-[24px] py-[12px] flex items-center gap-[8px] cursor-pointer hover:bg-white transition-all border-none relative z-10"
+          >
+            <p className="font-['Pavanam',sans-serif] leading-tight text-[20px] lg:text-[24px] text-black font-medium">
+              View Pricing Plans
+            </p>
+            <div className="size-[16px] lg:size-[20px]">
+              <svg className="block size-full" fill="none" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full relative">
-      <BackgroundDecor />
-
-      <div className="relative z-10">
-        {/* Title Section */}
-        <div className="flex flex-col gap-[8px] items-center mb-[60px] lg:mb-[80px]">
-          <p className="font-['Pavanam',sans-serif] leading-[52px] text-[36px] sm:text-[42px] lg:text-[52px] text-white text-center">WorkApply Subscription Plans</p>
-          <p className="font-['Pavanam',sans-serif] leading-[28px] text-[20px] sm:text-[24px] lg:text-[28px] text-center text-white">Find the plan that fits your job search.</p>
-        </div>
-
-        {/* Tier Cards */}
-        <div className="flex flex-col lg:flex-row gap-[32px] lg:gap-[24px] items-stretch justify-center max-w-[1200px] mx-auto mb-[60px]">
-          {/* Starter Plan $33 */}
-          <div className="relative bg-[rgba(26,26,26,0.7)] rounded-[4px] flex-1 max-w-full lg:max-w-[356px]">
-            <div aria-hidden="true" className="absolute border-[#9ba1a5] border-[0.5px] border-solid inset-[-0.5px] pointer-events-none rounded-[4.5px]" />
-            <div className="p-[40px] flex flex-col gap-[40px] h-full justify-between min-h-[500px] sm:min-h-[550px] lg:min-h-[600px]">
-              <div className="flex flex-col gap-[40px]">
-                <div className="flex flex-col gap-[4px]">
-                  <p className="font-['Pavanam',sans-serif] leading-[18px] text-[16px] text-[#faf9f6]">Starter</p>
-                  <p className="font-['Pavanam',sans-serif] leading-[28px] text-[28px] text-[#faf9f6]">$33 /Month</p>
-                </div>
-                <p className="font-['Pavanam',sans-serif] leading-[24px] text-[20px] text-[#faf9f6]">Perfect for job seekers who are exploring opportunities.</p>
-                <div className="flex flex-col gap-[8px]">
-                  <p className="font-['Pavanam',sans-serif] leading-[18px] text-[16px] text-[#faf9f6]">What's Included?</p>
-                  <div className="flex flex-col gap-[8px]">
-                    <div className="flex gap-[10px] items-start">
-                      <div className="relative shrink-0 size-[20px] mt-[2px]">
-                        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
-                          <path d={svgPathsSubscription.p13eef200} fill="#FAF9F6" />
-                        </svg>
-                      </div>
-                      <p className="font-['Pavanam',sans-serif] leading-[24px] text-[20px] text-[#faf9f6] flex-1">Auto Apply up to 100 jobs every week</p>
-                    </div>
-                    <div className="flex gap-[10px] items-start">
-                      <div className="relative shrink-0 size-[20px] mt-[2px]">
-                        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
-                          <path d={svgPathsSubscription.p13eef200} fill="#FAF9F6" />
-                        </svg>
-                      </div>
-                      <p className="font-['Pavanam',sans-serif] leading-[24px] text-[20px] text-[#faf9f6] flex-1">AI-powered job recommendations</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-[rgba(250,249,246,0.25)] flex gap-[4px] items-center justify-center px-[12px] py-[8px] rounded-[35px] cursor-pointer hover:bg-[rgba(250,249,246,0.35)] transition-colors">
-                <p className="font-['Pavanam',sans-serif] leading-[28px] text-[28px] text-black">Select Plan</p>
-                <div className="relative shrink-0 size-[24px]">
-                  <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
-                    <path d={svgPathsSubscription.p3991db40} fill="#0F0F0F" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Pro Plan $55 - Most Popular */}
-          <div className="relative bg-[rgba(26,26,26,0.7)] rounded-[4px] flex-1 max-w-full lg:max-w-[356px]">
-            <div aria-hidden="true" className="absolute border-[#9ba1a5] border-[0.5px] border-solid inset-[-0.5px] pointer-events-none rounded-[4.5px]" />
-            {/* Most Popular Badge */}
-            <div className="absolute left-1/2 -translate-x-1/2 top-[-16px] bg-[#611dcd] rounded-[1.667px] px-[12px] py-[6px] flex items-center gap-[8px]">
-              <div aria-hidden="true" className="absolute border-[#611dcd] border-[0.833px] border-solid inset-[-0.833px] pointer-events-none rounded-[2.5px]" />
-              <div className="relative size-[16px]">
-                <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src={imgWaveCircleWhite} />
-              </div>
-              <p className="font-['Pavanam',sans-serif] leading-[20px] text-[16.667px] text-white">Most Popular</p>
-            </div>
-            <div className="p-[40px] flex flex-col gap-[40px] h-full justify-between min-h-[500px] sm:min-h-[550px] lg:min-h-[600px]">
-              <div className="flex flex-col gap-[40px]">
-                <div className="flex flex-col gap-[4px]">
-                  <p className="font-['Pavanam',sans-serif] leading-[18px] text-[16px] text-[#faf9f6]">Starter</p>
-                  <p className="font-['Pavanam',sans-serif] leading-[28px] text-[28px] text-[#faf9f6]">$55 /Month</p>
-                </div>
-                <p className="font-['Pavanam',sans-serif] leading-[24px] text-[20px] text-[#faf9f6]">Advanced tools to accelerate your search.</p>
-                <div className="flex flex-col gap-[8px]">
-                  <p className="font-['Pavanam',sans-serif] leading-[18px] text-[16px] text-[#faf9f6]">What's Included?</p>
-                  <div className="flex flex-col gap-[8px]">
-                    <div className="flex gap-[10px] items-start">
-                      <div className="relative shrink-0 size-[20px] mt-[2px]">
-                        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
-                          <path d={svgPathsSubscription.p13eef200} fill="#FAF9F6" />
-                        </svg>
-                      </div>
-                      <p className="font-['Pavanam',sans-serif] leading-[24px] text-[20px] text-[#faf9f6] flex-1">Auto Apply up to 100 jobs every week</p>
-                    </div>
-                    <div className="flex gap-[10px] items-start">
-                      <div className="relative shrink-0 size-[20px] mt-[2px]">
-                        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
-                          <path d={svgPathsSubscription.p13eef200} fill="#FAF9F6" />
-                        </svg>
-                      </div>
-                      <p className="font-['Pavanam',sans-serif] leading-[24px] text-[20px] text-[#faf9f6] flex-1">AI-powered job recommendations</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-[rgba(250,249,246,0.25)] flex gap-[4px] items-center justify-center px-[12px] py-[8px] rounded-[35px] cursor-pointer hover:bg-[rgba(250,249,246,0.35)] transition-colors">
-                <p className="font-['Pavanam',sans-serif] leading-[28px] text-[28px] text-black">Select Plan</p>
-                <div className="relative shrink-0 size-[24px]">
-                  <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
-                    <path d={svgPathsSubscription.p3991db40} fill="#0F0F0F" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Premium Plan $65 */}
-          <div className="relative bg-[rgba(26,26,26,0.7)] rounded-[4px] flex-1 max-w-full lg:max-w-[356px]">
-            <div aria-hidden="true" className="absolute border-[#9ba1a5] border-[0.5px] border-solid inset-[-0.5px] pointer-events-none rounded-[4.5px]" />
-            <div className="p-[40px] flex flex-col gap-[40px] h-full justify-between min-h-[500px] sm:min-h-[550px] lg:min-h-[600px]">
-              <div className="flex flex-col gap-[40px]">
-                <div className="flex flex-col gap-[4px]">
-                  <p className="font-['Pavanam',sans-serif] leading-[18px] text-[16px] text-[#faf9f6]">Starter</p>
-                  <p className="font-['Pavanam',sans-serif] leading-[28px] text-[28px] text-[#faf9f6]">$65 /Month</p>
-                </div>
-                <p className="font-['Pavanam',sans-serif] leading-[24px] text-[20px] text-[#faf9f6]">Hands-free job applying with deep application customization.</p>
-                <div className="flex flex-col gap-[8px]">
-                  <p className="font-['Pavanam',sans-serif] leading-[18px] text-[16px] text-[#faf9f6]">What's Included?</p>
-                  <div className="flex flex-col gap-[8px]">
-                    <div className="flex gap-[10px] items-start">
-                      <div className="relative shrink-0 size-[20px] mt-[2px]">
-                        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
-                          <path d={svgPathsSubscription.p13eef200} fill="#FAF9F6" />
-                        </svg>
-                      </div>
-                      <p className="font-['Pavanam',sans-serif] leading-[24px] text-[20px] text-[#faf9f6] flex-1">Auto Apply up to 100 jobs every week</p>
-                    </div>
-                    <div className="flex gap-[10px] items-start">
-                      <div className="relative shrink-0 size-[20px] mt-[2px]">
-                        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
-                          <path d={svgPathsSubscription.p13eef200} fill="#FAF9F6" />
-                        </svg>
-                      </div>
-                      <p className="font-['Pavanam',sans-serif] leading-[24px] text-[20px] text-[#faf9f6] flex-1">AI-powered job recommendations</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-[rgba(250,249,246,0.25)] flex gap-[4px] items-center justify-center px-[12px] py-[8px] rounded-[35px] cursor-pointer hover:bg-[rgba(250,249,246,0.35)] transition-colors">
-                <p className="font-['Pavanam',sans-serif] leading-[28px] text-[28px] text-black">Select Plan</p>
-                <div className="relative shrink-0 size-[24px]">
-                  <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
-                    <path d={svgPathsSubscription.p3991db40} fill="#0F0F0F" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer Text */}
-        <div className="flex flex-col gap-[8px] items-center">
-          <p className="font-['Pavanam',sans-serif] leading-[28px] text-[20px] sm:text-[24px] lg:text-[28px] text-center text-white">You can cancel your plan at anytime.</p>
-          <p className="font-['Pavanam',sans-serif] leading-[28px] text-[20px] sm:text-[24px] lg:text-[28px] text-center text-white">Need help? Ask Us.</p>
-        </div>
+    <div className="max-w-[1000px] mx-auto">
+      <div className="bg-[#1a1a1a] rounded-[4px] p-[20px] lg:p-[32px]">
+        <p className="text-white text-xl">You have an active subscription: <span className="text-[#00d1ff] font-bold">{subscription?.pricingPlan?.name}</span></p>
       </div>
     </div>
   );

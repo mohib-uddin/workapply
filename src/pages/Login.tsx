@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import svgPaths from "@/components/ui/icons/login-wave-svg";
 import imgWaveCircleWhite200X2001 from "figma:asset/0a4654ea4398cf8f615304c83010e8a0c575f917.png";
+import onboardingSvg from "@/assets/icons/onboarding-svg";
 import AuthService from '@/services/auth.service';
 import { Loader2 } from 'lucide-react';
 
@@ -124,7 +125,7 @@ export function LoginPage({ onSignUpClick }: LoginPageProps) {
       <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px bg-[#9ba1a5]" />
 
       {/* Left Section */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center lg:justify-end px-6 py-8 lg:py-0 lg:pr-8 xl:pr-16 2xl:pr-20">
+      <div className="w-full lg:w-1/2 flex items-center justify-center lg:justify-end px-6 lg:pl-32 xl:pl-48 2xl:pl-64 py-8 lg:py-0 lg:pr-8 xl:pr-16 2xl:pr-20">
         <motion.div
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -135,13 +136,42 @@ export function LoginPage({ onSignUpClick }: LoginPageProps) {
             Find your next job with
           </p>
           <div className="flex gap-[8px] lg:gap-[10px] xl:gap-[12px] items-center justify-center lg:justify-end w-full">
-            <div className="relative shrink-0 w-[36px] h-[36px] lg:w-[44px] lg:h-[44px] xl:w-[52px] xl:h-[52px] 2xl:w-[60px] 2xl:h-[60px]">
+            <motion.div
+              className="relative shrink-0 w-[36px] h-[36px] lg:w-[44px] lg:h-[44px] xl:w-[52px] xl:h-[52px] 2xl:w-[60px] 2xl:h-[60px] cursor-pointer"
+              animate={{
+                rotate: [0, 0, 360],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                repeatDelay: 5,
+                ease: "easeInOut"
+              }}
+              whileHover={{
+                rotate: 20,
+                scale: 1.1,
+              }}
+              whileTap={{ scale: 0.9 }}
+            >
               <img
                 alt="WorkApply Logo"
                 className="absolute inset-0 w-full h-full object-cover"
                 src={imgWaveCircleWhite200X2001}
               />
-            </div>
+              {/* Subtle glow effect */}
+              <motion.div
+                className="absolute inset-0 bg-white/20 rounded-full blur-md"
+                animate={{
+                  opacity: [0, 0.4, 0],
+                  scale: [1, 1.2, 1],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatDelay: 4.5,
+                }}
+              />
+            </motion.div>
             <p className="font-['Pavanam',sans-serif] text-white text-[28px] sm:text-[32px] lg:text-[36px] xl:text-[44px] 2xl:text-[52px] leading-[1.0]">
               WorkApply
             </p>
@@ -200,27 +230,39 @@ export function LoginPage({ onSignUpClick }: LoginPageProps) {
             </div>
 
             {/* Login Button */}
-            <button
+            <motion.button
+              whileHover={!loginMutation.isPending ? { scale: 1.05 } : {}}
+              whileTap={!loginMutation.isPending ? { scale: 0.95 } : {}}
               type="submit"
               disabled={loginMutation.isPending}
-              className="bg-[#faf9f6] rounded-[35px] w-full py-[6px] lg:py-[7px] xl:py-[8px] px-[12px] hover:bg-opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+              className={`w-full flex gap-[8px] items-center justify-center px-[20px] lg:px-[24px] xl:px-[28px] 2xl:px-[32px] py-[8px] lg:py-[10px] xl:py-[12px] 2xl:py-[14px] rounded-[35px] transition-all border-none ${!loginMutation.isPending
+                ? 'bg-[#faf9f6] hover:bg-white cursor-pointer'
+                : 'bg-[#1a1a1a] border border-[#faf9f6]/30 opacity-50 cursor-not-allowed'
+                }`}
             >
               {loginMutation.isPending && <Loader2 className="animate-spin text-black" size={24} />}
-              <span className="font-['Pavanam',sans-serif] text-black text-[24px] lg:text-[28px] xl:text-[34px] 2xl:text-[40px] leading-[1.2]">
+              <span className={`font-['Pavanam',sans-serif] text-[18px] sm:text-[20px] lg:text-[24px] xl:text-[30px] 2xl:text-[40px] leading-[1.0] font-medium ${!loginMutation.isPending ? 'text-black' : 'text-[#faf9f6]'}`}>
                 {loginMutation.isPending ? 'Signing in...' : 'Login'}
               </span>
-            </button>
+              {!loginMutation.isPending && (
+                <div className="relative shrink-0 size-[14px] lg:size-[16px] xl:size-[18px] 2xl:size-[24px]">
+                  <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
+                    <path d={onboardingSvg.p54e7200} fill="#1D1B20" />
+                  </svg>
+                </div>
+              )}
+            </motion.button>
 
             {/* Sign Up Link */}
-            <div className="flex gap-[6px] items-center justify-center flex-wrap">
-              <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[14px] lg:text-[16px] xl:text-[18px] 2xl:text-[20px] leading-[1.2]">
+            <div className="flex gap-[6px] items-center justify-center">
+              <p className="font-['Pavanam',sans-serif] text-[#faf9f6]/60 text-[14px] lg:text-[16px] xl:text-[18px] 2xl:text-[24px] leading-none">
                 New to WorkApply?
               </p>
               <button
                 type="button"
                 onClick={onSignUpClick}
                 disabled={loginMutation.isPending}
-                className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[14px] lg:text-[16px] xl:text-[18px] 2xl:text-[20px] leading-[1.2] border-b-2 border-transparent hover:border-white transition-colors pb-[3px] disabled:opacity-50"
+                className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[14px] lg:text-[16px] xl:text-[18px] 2xl:text-[24px] leading-none border-b border-[#faf9f6]/30 hover:border-[#faf9f6] transition-colors pb-px disabled:opacity-50"
               >
                 Sign up here.
               </button>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import svgPaths from "@/assets/icons/onboarding-svg";
 import imgLogo4 from "figma:asset/183455f9c95614951c915b43688a9887b44c6a17.png";
 import { BackgroundDecor } from "@/components/ui/BackgroundDecor";
@@ -50,9 +51,16 @@ function ProgressIndicator({ current, total }: { current: number; total: number 
     <div className="w-[85%] lg:w-[80%] flex items-center gap-[10px] lg:gap-[12px] xl:gap-[16px] 2xl:gap-[20px]">
       <div className="flex-1 relative h-[16px] lg:h-[20px] xl:h-[24px] 2xl:h-[30px]">
         <div className="absolute inset-0 bg-[#1a1a1a] rounded-[1px]" />
-        <div
-          className="absolute left-0 top-0 bottom-0 bg-[#611dcd] rounded-[1px] transition-all duration-300"
-          style={{ width: `${progressPercentage}%` }}
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${progressPercentage}%` }}
+          transition={{
+            type: "spring",
+            stiffness: 50,
+            damping: 15,
+            restDelta: 0.001
+          }}
+          className="absolute left-0 top-0 bottom-0 bg-[#611dcd] rounded-[1px]"
         />
       </div>
       <p className="font-['Pavanam',sans-serif] text-white text-[12px] lg:text-[14px] xl:text-[16px] 2xl:text-[20px] whitespace-nowrap">
@@ -64,7 +72,10 @@ function ProgressIndicator({ current, total }: { current: number; total: number 
 
 function BackButton({ onClick }: { onClick: () => void }) {
   return (
-    <button
+    <motion.button
+      whileHover={{ scale: 1.05, x: -8 }}
+      whileTap={{ scale: 0.92 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
       onClick={onClick}
       className="flex gap-[6px] items-center hover:opacity-80 transition-all group"
     >
@@ -76,7 +87,7 @@ function BackButton({ onClick }: { onClick: () => void }) {
       <p className="font-['Pavanam',sans-serif] text-white text-[16px] lg:text-[18px] xl:text-[22px] 2xl:text-[28px] leading-[1.0]">
         Back
       </p>
-    </button>
+    </motion.button>
   );
 }
 
@@ -225,12 +236,18 @@ export function DynamicOnboardingQuestion({
               <button
                 key={String(option.value)}
                 onClick={() => setSelectedValue(option.value)}
-                className={`min-w-[140px] sm:min-w-[240px] lg:min-w-[280px] xl:min-w-[300px] bg-[#1a1a1a] rounded-[4px] border px-[16px] py-[10px] lg:px-[20px] lg:py-[12px] xl:px-[24px] xl:py-[16px] 2xl:px-[32px] 2xl:py-[20px] transition-all ${selectedValue === option.value
-                  ? 'border-[#faf9f6] border-[2px] lg:border-[3px] xl:border-[4px]'
-                  : 'border-[#faf9f6] border-[1px] hover:border-[2px]'
+                className={`min-w-[140px] sm:min-w-[240px] lg:min-w-[280px] xl:min-w-[300px] bg-[#1a1a1a] rounded-[4px] border-[2px] lg:border-[3px] 2xl:border-[4px] px-[16px] py-[10px] lg:px-[20px] lg:py-[12px] xl:px-[24px] xl:py-[16px] 2xl:px-[32px] 2xl:py-[20px] transition-all relative overflow-hidden group/btn ${selectedValue === option.value
+                    ? 'border-[#faf9f6]'
+                    : 'border-[#faf9f6]/10 hover:border-[#faf9f6]/40'
                   }`}
               >
-                <p className="font-['Pavanam',sans-serif] text-white text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[32px] leading-[1.2]">
+                {selectedValue === option.value && (
+                  <motion.div
+                    layoutId="active-glow"
+                    className="absolute inset-0 bg-white/5 blur-xl"
+                  />
+                )}
+                <p className="font-['Pavanam',sans-serif] text-white text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[32px] leading-[1.2] relative z-10">
                   {option.label}
                 </p>
               </button>
@@ -244,9 +261,9 @@ export function DynamicOnboardingQuestion({
             {question.showSelectAll && question.multiSelectOptions && (
               <button
                 onClick={handleSelectAll}
-                className={`w-full max-w-[300px] sm:max-w-[400px] lg:max-w-[500px] bg-[#1a1a1a] rounded-[4px] border px-[10px] py-[10px] lg:px-[12px] lg:py-[12px] xl:px-[14px] xl:py-[14px] 2xl:px-[16px] 2xl:py-[16px] transition-all ${selectedValues.length === question.multiSelectOptions.length
-                    ? 'border-[#faf9f6] border-[2px] lg:border-[3px] xl:border-[4px]'
-                    : 'border-[#faf9f6] border-[1px] hover:border-[2px]'
+                className={`w-full max-w-[300px] sm:max-w-[400px] lg:max-w-[500px] bg-[#1a1a1a] rounded-[4px] border-[2px] lg:border-[3px] 2xl:border-[4px] px-[10px] py-[10px] lg:px-[12px] lg:py-[12px] xl:px-[14px] xl:py-[14px] 2xl:px-[16px] 2xl:py-[16px] transition-all ${selectedValues.length === question.multiSelectOptions.length
+                    ? 'border-[#faf9f6]'
+                    : 'border-[#faf9f6]/10 hover:border-[#faf9f6]/40'
                   }`}
               >
                 <p className="font-['Pavanam',sans-serif] text-white text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[32px] leading-[1.0]">
@@ -255,13 +272,13 @@ export function DynamicOnboardingQuestion({
               </button>
             )}
             <div className="flex flex-wrap justify-center gap-[12px] lg:gap-[20px] xl:gap-[28px] 2xl:gap-[32px] w-full">
-              {question.multiSelectOptions?.map((option) => (
+              {question.multiSelectOptions?.map((option, idx) => (
                 <button
                   key={option.value}
                   onClick={() => toggleSelection(option.value)}
-                  className={`min-w-[140px] sm:min-w-[240px] lg:min-w-[280px] xl:min-w-[300px] bg-[#1a1a1a] rounded-[4px] border px-[16px] py-[10px] lg:px-[20px] lg:py-[12px] xl:px-[24px] xl:py-[16px] 2xl:px-[32px] 2xl:py-[20px] transition-all flex items-center justify-center text-center ${selectedValues.includes(option.value)
-                      ? 'border-[#faf9f6] border-[2px] lg:border-[3px] xl:border-[4px]'
-                      : 'border-[#faf9f6] border-[1px] hover:border-[2px]'
+                  className={`min-w-[140px] sm:min-w-[240px] lg:min-w-[280px] xl:min-w-[300px] bg-[#1a1a1a] rounded-[4px] border-[2px] lg:border-[3px] 2xl:border-[4px] px-[16px] py-[10px] lg:px-[20px] lg:py-[12px] xl:px-[24px] xl:py-[16px] 2xl:px-[32px] 2xl:py-[20px] transition-all flex items-center justify-center text-center ${selectedValues.includes(option.value)
+                      ? 'border-[#faf9f6]'
+                      : 'border-[#faf9f6]/10 hover:border-[#faf9f6]/40'
                     }`}
                 >
                   <p className="font-['Pavanam',sans-serif] text-white text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[22px] 2xl:text-[32px] leading-tight">
@@ -459,55 +476,83 @@ export function DynamicOnboardingQuestion({
         <div className="w-full flex justify-center mb-[40px] lg:mb-[50px] xl:mb-[66px]">
           <ProgressIndicator current={question.currentStep} total={totalSteps} />
         </div>
-        <div className="w-full max-w-[90%] sm:max-w-[85%] lg:max-w-[80%] xl:max-w-[75%] 2xl:max-w-[1240px] mb-[40px] lg:mb-[50px] xl:mb-[70px] 2xl:mb-[96px]">
-          <div className="flex items-start justify-between gap-[16px] lg:gap-[24px]">
-            {/* Left slot for Back Button - fixed width to balance the center */}
-            <div className="flex-1 flex justify-start min-w-[80px] lg:min-w-[120px] xl:min-w-[160px]">
-              <BackButton onClick={onBack} />
-            </div>
 
-            {/* Center slot for Title and Description */}
-            <div className="flex-[3] flex flex-col gap-[6px] lg:gap-[8px] xl:gap-[10px] 2xl:gap-[12px] text-center">
-              <h1 className="font-['Pavanam',sans-serif] text-white text-[24px] sm:text-[28px] lg:text-[32px] xl:text-[40px] 2xl:text-[52px] leading-[1.1]">
-                {question.title}
-              </h1>
-              <p className="font-['Pavanam',sans-serif] text-white text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[22px] 2xl:text-[28px] leading-[1.2] opacity-70 max-w-[800px] mx-auto">
-                {question.description}
-              </p>
-            </div>
-
-            {/* Right slot for symmetry to keep title centered */}
-            <div className="flex-1 hidden sm:flex min-w-[80px] lg:min-w-[120px] xl:min-w-[160px]" aria-hidden="true" />
-          </div>
-        </div>
-        {renderQuestionContent()}
-        <div className="w-full flex justify-center px-4 sm:px-6 lg:px-8 pb-[40px]">
-          <div className="w-full max-w-[90%] sm:max-w-[600px] lg:max-w-[661px] flex flex-col gap-[12px] lg:gap-[16px] xl:gap-[20px] 2xl:gap-[24px] items-center">
-            <button
-              onClick={handleContinue}
-              disabled={isContinueDisabled()}
-              className={`flex gap-[6px] items-center justify-center px-[20px] lg:px-[24px] xl:px-[28px] 2xl:px-[32px] py-[8px] lg:py-[10px] xl:py-[12px] 2xl:py-[14px] rounded-[35px] transition-all ${!isContinueDisabled()
-                ? 'bg-[#faf9f6] hover:bg-white cursor-pointer'
-                : 'bg-[#0f0f0f] border border-[#faf9f6] opacity-50 cursor-not-allowed'
-                }`}
-            >
-              <p className={`font-['Pavanam',sans-serif] text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[40px] leading-[1.0] ${!isContinueDisabled() ? 'text-black' : 'text-[#faf9f6]'
-                }`}>
-                Continue
-              </p>
-              <div className="relative shrink-0 size-[14px] lg:size-[16px] xl:size-[18px] 2xl:size-[24px]">
-                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
-                  <path d={svgPaths.p54e7200} fill={!isContinueDisabled() ? '#1D1B20' : 'white'} />
-                </svg>
+        <motion.div
+          key={question.key}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          className="w-full flex flex-col items-center"
+        >
+          <div className="w-full max-w-[90%] sm:max-w-[85%] lg:max-w-[80%] xl:max-w-[75%] 2xl:max-w-[1240px] mb-[40px] lg:mb-[50px] xl:mb-[70px] 2xl:mb-[96px]">
+            <div className="flex items-start justify-between gap-[16px] lg:gap-[24px]">
+              {/* Left slot for Back Button - fixed width to balance the center */}
+              <div className="flex-1 flex justify-start min-w-[80px] lg:min-w-[120px] xl:min-w-[160px]">
+                <BackButton onClick={onBack} />
               </div>
-            </button>
-            <p className="font-['Pavanam',sans-serif] text-white text-[12px] sm:text-[13px] lg:text-[14px] xl:text-[16px] 2xl:text-[28px] text-center leading-[1.0]">
-              You can always update this later in your profile
-            </p>
+
+              {/* Center slot for Title and Description */}
+              <div className="flex-[3] flex flex-col gap-[6px] lg:gap-[8px] xl:gap-[10px] 2xl:gap-[12px] text-center">
+                <h1 className="font-['Pavanam',sans-serif] text-white text-[24px] sm:text-[28px] lg:text-[32px] xl:text-[40px] 2xl:text-[52px] leading-[1.1]">
+                  {question.title}
+                </h1>
+                <p className="font-['Pavanam',sans-serif] text-white text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[22px] 2xl:text-[28px] leading-[1.2] opacity-70 max-w-[800px] mx-auto">
+                  {question.description}
+                </p>
+              </div>
+
+              {/* Right slot for symmetry to keep title centered */}
+              <div className="flex-1 hidden sm:flex min-w-[80px] lg:min-w-[120px] xl:min-w-[160px]" aria-hidden="true" />
+            </div>
           </div>
-        </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={question.key + "-content"}
+              initial={{ opacity: 0, scale: 0.96, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 1.02, y: -10 }}
+              transition={{
+                type: "spring",
+                stiffness: 120,
+                damping: 22
+              }}
+              className="w-full flex justify-center"
+            >
+              {renderQuestionContent()}
+            </motion.div>
+          </AnimatePresence>
+
+          <div className="w-full flex justify-center px-4 sm:px-6 lg:px-8 pb-[40px] mt-auto">
+            <div className="w-full max-w-[90%] sm:max-w-[600px] lg:max-w-[661px] flex flex-col gap-[12px] lg:gap-[16px] xl:gap-[20px] 2xl:gap-[24px] items-center">
+              <motion.button
+                whileHover={!isContinueDisabled() ? { scale: 1.05 } : {}}
+                whileTap={!isContinueDisabled() ? { scale: 0.95 } : {}}
+                onClick={handleContinue}
+                disabled={isContinueDisabled()}
+                className={`flex gap-[6px] items-center justify-center px-[20px] lg:px-[24px] xl:px-[28px] 2xl:px-[32px] py-[8px] lg:py-[10px] xl:py-[12px] 2xl:py-[14px] rounded-[35px] transition-all border-none ${!isContinueDisabled()
+                  ? 'bg-[#faf9f6] hover:bg-white cursor-pointer'
+                  : 'bg-[#1a1a1a] border border-[#faf9f6]/30 opacity-50 cursor-not-allowed'
+                  }`}
+              >
+                <p className={`font-['Pavanam',sans-serif] text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[40px] leading-[1.0] font-medium ${!isContinueDisabled() ? 'text-black' : 'text-[#faf9f6]'
+                  }`}>
+                  Continue
+                </p>
+                <div className="relative shrink-0 size-[14px] lg:size-[16px] xl:size-[18px] 2xl:size-[24px]">
+                  <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
+                    <path d={svgPaths.p54e7200} fill={!isContinueDisabled() ? '#1D1B20' : '#FAF9F6'} />
+                  </svg>
+                </div>
+              </motion.button>
+              <p className="font-['Pavanam',sans-serif] text-white text-[12px] sm:text-[13px] lg:text-[14px] xl:text-[16px] 2xl:text-[28px] text-center leading-[1.0] opacity-60">
+                You can always update this later in your profile
+              </p>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
 }
-

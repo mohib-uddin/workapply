@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import svgPaths from "@/components/ui/icons/signup-wave-svg";
 import imgWaveCircleWhite200X2001 from "figma:asset/0a4654ea4398cf8f615304c83010e8a0c575f917.png";
+import onboardingSvg from "@/assets/icons/onboarding-svg";
 import AuthService from '@/services/auth.service';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -138,21 +139,50 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
       <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px bg-[#9ba1a5]" />
 
       {/* Left Section */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center lg:justify-end px-6 py-8 lg:py-0 lg:pr-8 xl:pr-16 2xl:pr-20">
+      <div className="w-full lg:w-1/2 flex items-center justify-center lg:justify-end px-6 lg:pl-32 xl:pl-48 2xl:pl-64 py-8 lg:py-0 lg:pr-8 xl:pr-16 2xl:pr-20">
         <motion.div
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-          className="w-full max-w-[700px] lg:max-w-none lg:w-auto flex flex-col gap-[14px] lg:gap-[16px] xl:gap-[22px] 2xl:gap-[30px] items-center lg:items-end text-center lg:text-right"
+          className="w-full max-w-[700px] lg:max-w-none lg:w-auto flex flex-col gap-[14px] lg:gap-[18px] xl:gap-[26px] 2xl:gap-[32px] items-center lg:items-end text-center lg:text-right"
         >
-          <div className="relative shrink-0 w-[36px] h-[36px] lg:w-[40px] lg:h-[40px] xl:w-[48px] xl:h-[48px] 2xl:w-[60px] 2xl:h-[60px]">
+          <motion.div
+            className="relative shrink-0 w-[36px] h-[36px] lg:w-[44px] lg:h-[44px] xl:w-[52px] xl:h-[52px] 2xl:w-[60px] 2xl:h-[60px] cursor-pointer"
+            animate={{
+              rotate: [0, 0, 360],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              repeatDelay: 5,
+              ease: "easeInOut"
+            }}
+            whileHover={{
+              rotate: 20,
+              scale: 1.1,
+            }}
+            whileTap={{ scale: 0.9 }}
+          >
             <img
               alt="WorkApply Logo"
               className="absolute inset-0 w-full h-full object-cover"
               src={imgWaveCircleWhite200X2001}
             />
-          </div>
-          <p className="font-['Pavanam',sans-serif] text-white text-[24px] sm:text-[28px] lg:text-[30px] xl:text-[38px] 2xl:text-[52px] leading-[1.0]">
+            {/* Subtle glow effect */}
+            <motion.div
+              className="absolute inset-0 bg-white/20 rounded-full blur-md"
+              animate={{
+                opacity: [0, 0.4, 0],
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                repeatDelay: 4.5,
+              }}
+            />
+          </motion.div>
+          <p className="font-['Pavanam',sans-serif] text-white text-[28px] sm:text-[32px] lg:text-[36px] xl:text-[44px] 2xl:text-[52px] leading-[1.0]">
             We're happy you're joining us!
           </p>
         </motion.div>
@@ -161,16 +191,16 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
       {/* Right Section - Sign Up Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center lg:justify-start px-6 py-8 lg:py-0 lg:pl-8 xl:pl-16 2xl:pl-20">
         <div className="w-full max-w-[500px] lg:max-w-[380px] xl:max-w-[480px] 2xl:max-w-[672px]">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-[28px] lg:gap-[32px] xl:gap-[44px] 2xl:gap-[64px]">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-[32px] lg:gap-[38px] xl:gap-[48px] 2xl:gap-[56px]">
             {/* Title */}
-            <h1 className="font-['Pavanam',sans-serif] text-white text-[24px] sm:text-[28px] lg:text-[30px] xl:text-[38px] 2xl:text-[52px] leading-[1.0]">
+            <h1 className="font-['Pavanam',sans-serif] text-white text-[28px] sm:text-[32px] lg:text-[36px] xl:text-[44px] 2xl:text-[52px] leading-[1.0]">
               Let's Get You Set Up.
             </h1>
 
             {/* Form Fields */}
-            <div className="flex flex-col gap-[14px] lg:gap-[14px] xl:gap-[18px] 2xl:gap-[24px]">
+            <div className="flex flex-col gap-[16px] lg:gap-[18px] xl:gap-[22px] 2xl:gap-[24px]">
               {/* Name Row */}
-              <div className="flex flex-col sm:flex-row gap-[14px] lg:gap-[14px] xl:gap-[18px] 2xl:gap-[24px] w-full">
+              <div className="flex flex-col sm:flex-row gap-[16px] lg:gap-[18px] xl:gap-[22px] 2xl:gap-[24px] w-full">
                 {/* First Name */}
                 <div className="relative rounded-[2px] w-full">
                   <div className="absolute border border-[#9ba1a5] border-solid inset-0 pointer-events-none rounded-[2px]" />
@@ -180,7 +210,7 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
                     disabled={signupMutation.isPending}
                     onChange={(e) => setFirstName(e.target.value)}
                     placeholder="First Name"
-                    className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px] lg:text-[17px] xl:text-[20px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[10px] py-[8px] lg:py-[9px] xl:py-[10px] 2xl:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
+                    className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[12px] py-[10px] lg:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
                     required
                   />
                 </div>
@@ -194,7 +224,7 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
                     disabled={signupMutation.isPending}
                     onChange={(e) => setLastName(e.target.value)}
                     placeholder="Last Name"
-                    className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px] lg:text-[17px] xl:text-[20px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[10px] py-[8px] lg:py-[9px] xl:py-[10px] 2xl:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
+                    className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[12px] py-[10px] lg:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
                     required
                   />
                 </div>
@@ -209,7 +239,7 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
                   disabled={signupMutation.isPending}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email"
-                  className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px] lg:text-[17px] xl:text-[20px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[10px] py-[8px] lg:py-[9px] xl:py-[10px] 2xl:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
+                  className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[12px] py-[10px] lg:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
                   required
                 />
               </div>
@@ -223,7 +253,7 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
                   disabled={signupMutation.isPending}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
-                  className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px] lg:text-[17px] xl:text-[20px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[10px] py-[8px] lg:py-[9px] xl:py-[10px] 2xl:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
+                  className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[12px] py-[10px] lg:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
                   required
                 />
               </div>
@@ -237,19 +267,19 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
                   disabled={signupMutation.isPending}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm Password"
-                  className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px] lg:text-[17px] xl:text-[20px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[10px] py-[8px] lg:py-[9px] xl:py-[10px] 2xl:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
+                  className="w-full bg-transparent font-['Pavanam',sans-serif] text-[#9ba1a5] text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[28px] leading-[1.2] px-[10px] lg:px-[12px] py-[10px] lg:py-[12px] outline-none placeholder:text-[#9ba1a5] disabled:opacity-50"
                   required
                 />
               </div>
 
               {/* Terms & Conditions */}
-              <div className="flex gap-[6px] items-start justify-center flex-wrap">
-                <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[12px] lg:text-[13px] xl:text-[15px] 2xl:text-[20px] leading-[1.2]">
+              <div className="flex gap-[6px] items-center justify-center">
+                <p className="font-['Pavanam',sans-serif] text-[#faf9f6]/60 text-[14px] lg:text-[16px] xl:text-[18px] 2xl:text-[20px] leading-none">
                   By signing up, you agree to our
                 </p>
                 <a
                   href="#"
-                  className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[12px] lg:text-[13px] xl:text-[15px] 2xl:text-[20px] leading-[1.2] border-b-2 border-transparent hover:border-white transition-colors pb-[3px]"
+                  className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[14px] lg:text-[16px] xl:text-[18px] 2xl:text-[20px] leading-none border-b border-[#faf9f6]/30 hover:border-[#faf9f6] transition-colors pb-px"
                 >
                   Terms & Conditions
                 </a>
@@ -257,27 +287,39 @@ export function SignUpPage({ onSignInClick, onSignUpComplete }: SignUpPageProps)
             </div>
 
             {/* Create Account Button */}
-            <button
+            <motion.button
+              whileHover={!signupMutation.isPending ? { scale: 1.05 } : {}}
+              whileTap={!signupMutation.isPending ? { scale: 0.95 } : {}}
               type="submit"
               disabled={signupMutation.isPending}
-              className="bg-[#faf9f6] rounded-[35px] w-full py-[6px] lg:py-[6px] xl:py-[7px] 2xl:py-[8px] px-[12px] hover:bg-opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+              className={`w-full flex gap-[8px] items-center justify-center px-[20px] lg:px-[24px] xl:px-[28px] 2xl:px-[32px] py-[8px] lg:py-[10px] xl:py-[12px] 2xl:py-[14px] rounded-[35px] transition-all border-none ${!signupMutation.isPending
+                ? 'bg-[#faf9f6] hover:bg-white cursor-pointer'
+                : 'bg-[#1a1a1a] border border-[#faf9f6]/30 opacity-50 cursor-not-allowed'
+                }`}
             >
               {signupMutation.isPending && <Loader2 className="animate-spin text-black" size={24} />}
-              <span className="font-['Pavanam',sans-serif] text-black text-[22px] lg:text-[24px] xl:text-[30px] 2xl:text-[40px] leading-[1.2]">
+              <span className={`font-['Pavanam',sans-serif] text-[18px] sm:text-[20px] lg:text-[24px] xl:text-[30px] 2xl:text-[40px] leading-[1.0] font-medium ${!signupMutation.isPending ? 'text-black' : 'text-[#faf9f6]'}`}>
                 {signupMutation.isPending ? 'Creating Account...' : 'Create Account'}
               </span>
-            </button>
+              {!signupMutation.isPending && (
+                <div className="relative shrink-0 size-[14px] lg:size-[16px] xl:size-[18px] 2xl:size-[24px]">
+                  <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
+                    <path d={onboardingSvg.p54e7200} fill="#1D1B20" />
+                  </svg>
+                </div>
+              )}
+            </motion.button>
 
             {/* Sign In Link */}
-            <div className="flex gap-[6px] items-center justify-center flex-wrap">
-              <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[12px] lg:text-[13px] xl:text-[15px] 2xl:text-[20px] leading-[1.2]">
+            <div className="flex gap-[6px] items-center justify-center">
+              <p className="font-['Pavanam',sans-serif] text-[#faf9f6]/60 text-[14px] lg:text-[16px] xl:text-[18px] 2xl:text-[24px] leading-none">
                 Already have an account?
               </p>
               <button
                 type="button"
                 onClick={onSignInClick}
                 disabled={signupMutation.isPending}
-                className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[12px] lg:text-[13px] xl:text-[15px] 2xl:text-[20px] leading-[1.2] border-b-2 border-transparent hover:border-white transition-colors pb-[3px] disabled:opacity-50"
+                className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[14px] lg:text-[16px] xl:text-[18px] 2xl:text-[24px] leading-none border-b border-[#faf9f6]/30 hover:border-[#faf9f6] transition-colors pb-px disabled:opacity-50"
               >
                 Sign in here.
               </button>

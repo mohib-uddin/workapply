@@ -10,7 +10,15 @@ interface TopNavBarProps {
     onProfileClick: () => void;
 }
 
+import UserService from '@/services/user.service';
+import { Spinner } from '../ui/Spinner';
+
 export function TopNavBar({ currentTab, onTabChange, onProfileClick }: TopNavBarProps) {
+    const { useFetchCurrentSubscription } = UserService();
+    const { data: subscription, isLoading } = useFetchCurrentSubscription();
+
+    const isSubscribed = !!subscription;
+
     return (
         <div className="bg-[#0f0f0f] w-full flex h-[56px] items-center justify-between px-[20px] sm:px-[40px] lg:px-[80px] py-0 border-b border-[#1a1a1a] shrink-0 z-50">
             {/* Logo */}
@@ -35,16 +43,22 @@ export function TopNavBar({ currentTab, onTabChange, onProfileClick }: TopNavBar
                         label="Dashboard"
                         onClick={() => onTabChange('dashboard')}
                     />
-                    <NavItem
-                        active={currentTab === 'queue'}
-                        label="Job Queue"
-                        onClick={() => onTabChange('queue')}
-                    />
-                    <NavItem
-                        active={currentTab === 'applications'}
-                        label="Applications"
-                        onClick={() => onTabChange('applications')}
-                    />
+                    {isLoading ? (
+                        <Spinner className="size-4 text-white/50" />
+                    ) : isSubscribed ? (
+                        <>
+                            <NavItem
+                                active={currentTab === 'queue'}
+                                label="Job Queue"
+                                onClick={() => onTabChange('queue')}
+                            />
+                            <NavItem
+                                active={currentTab === 'applications'}
+                                label="Applications"
+                                onClick={() => onTabChange('applications')}
+                            />
+                        </>
+                    ) : null}
                 </div>
 
                 {/* Notif + Profile */}
