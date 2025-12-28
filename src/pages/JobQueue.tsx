@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ThumbsUp, ThumbsDown } from 'lucide-react';
 import svgPaths from "@/components/ui/icons/job-queue-svg";
 import { BackgroundDecor } from "@/components/ui/BackgroundDecor";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
@@ -70,6 +71,9 @@ interface JobCardProps {
 }
 
 function JobCardSidebar({ job, isSelected, onClick }: JobCardProps) {
+  const [isLiked, setIsLiked] = useState(false);
+  const [isDisliked, setIsDisliked] = useState(false);
+
   return (
     <div
       className={`${isSelected ? 'bg-[#0f0f0f]' : 'bg-[#1a1a1a]'} content-stretch flex flex-col items-start px-[32px] py-[24px] relative shrink-0 w-full cursor-pointer hover:bg-[#0f0f0f] transition-colors`}
@@ -110,45 +114,74 @@ function JobCardSidebar({ job, isSelected, onClick }: JobCardProps) {
           </div>
         </div>
 
-        {/* Details */}
-        <div className="content-stretch flex gap-[24px] items-center relative shrink-0 w-full flex-wrap">
-          <div className="content-stretch flex gap-[5px] items-center justify-center relative shrink-0">
-            <div className="relative shrink-0 size-[5px]">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5 5">
-                <circle cx="2.5" cy="2.5" fill="#FAF9F6" r="2.5" />
-              </svg>
+        {/* Details and Actions */}
+        <div className="content-stretch flex justify-between items-end relative shrink-0 w-full gap-[16px]">
+          <div className="content-stretch flex gap-[24px] items-center relative shrink-0 flex-1 flex-wrap">
+            <div className="content-stretch flex gap-[5px] items-center justify-center relative shrink-0">
+              <div className="relative shrink-0 size-[5px]">
+                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5 5">
+                  <circle cx="2.5" cy="2.5" fill="#FAF9F6" r="2.5" />
+                </svg>
+              </div>
+              <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#faf9f6] text-[16px] text-nowrap">
+                <p className="leading-[18px]">{job.location}</p>
+              </div>
             </div>
-            <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#faf9f6] text-[16px] text-nowrap">
-              <p className="leading-[18px]">{job.location}</p>
+
+            <div className="content-stretch flex gap-[5px] items-center justify-center relative shrink-0">
+              <div className="relative shrink-0 size-[5px]">
+                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5 5">
+                  <circle cx="2.5" cy="2.5" fill="#FAF9F6" r="2.5" />
+                </svg>
+              </div>
+              <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#faf9f6] text-[16px] text-nowrap">
+                <p className="leading-[18px]">{job.postedTime}</p>
+              </div>
+            </div>
+
+            <div className="content-stretch flex gap-[5px] items-center justify-center relative shrink-0">
+              <div className="relative shrink-0 size-[5px]">
+                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5 5">
+                  <circle cx="2.5" cy="2.5" fill="#FAF9F6" r="2.5" />
+                </svg>
+              </div>
+              <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#faf9f6] text-[16px] text-nowrap">
+                <p className="leading-[18px]">{job.salary}</p>
+              </div>
             </div>
           </div>
 
-          <div className="content-stretch flex gap-[5px] items-center justify-center relative shrink-0">
-            <div className="relative shrink-0 size-[5px]">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5 5">
-                <circle cx="2.5" cy="2.5" fill="#FAF9F6" r="2.5" />
-              </svg>
-            </div>
-            <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#faf9f6] text-[16px] text-nowrap">
-              <p className="leading-[18px]">{job.postedTime}</p>
-            </div>
-          </div>
-
-          <div className="content-stretch flex gap-[5px] items-center justify-center relative shrink-0">
-            <div className="relative shrink-0 size-[5px]">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5 5">
-                <circle cx="2.5" cy="2.5" fill="#FAF9F6" r="2.5" />
-              </svg>
-            </div>
-            <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#faf9f6] text-[16px] text-nowrap">
-              <p className="leading-[18px]">{job.salary}</p>
-            </div>
+          {/* Action Icons */}
+          <div className="flex items-center gap-[12px] pb-[2px]">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsLiked(!isLiked);
+                if (isDisliked) setIsDisliked(false);
+              }}
+              className={`transition-colors p-[4px] rounded-full hover:bg-white/10 ${isLiked ? 'text-[#611DCD]' : 'text-[#9ba1a5]'}`}
+              title="Like job"
+            >
+              <ThumbsUp size={18} fill={isLiked ? "currentColor" : "none"} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsDisliked(!isDisliked);
+                if (isLiked) setIsLiked(false);
+              }}
+              className={`transition-colors p-[4px] rounded-full hover:bg-white/10 ${isDisliked ? 'text-red-500' : 'text-[#9ba1a5]'}`}
+              title="Dislike job"
+            >
+              <ThumbsDown size={18} fill={isDisliked ? "currentColor" : "none"} />
+            </button>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
 
 // Job Details Panel (Right Side)
 function JobDetailsPanel({ job }: { job: Job }) {
