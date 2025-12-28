@@ -1,0 +1,1430 @@
+[
+    {
+      "job_title": "Registered Nurse",
+      "category": "Healthcare",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Administrative Assistant",
+      "category": "Administrative",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Nurse",
+      "category": "Healthcare",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Interpreter",
+      "category": "Healthcare",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Translator",
+      "category": "Administrative",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Director of HR",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Sales Associate",
+      "category": "Sales",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Retail Sales Associate",
+      "category": "Retail",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Customer Service Representative",
+      "category": "Customer Service",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Receptionist",
+      "category": "Administrative",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Nurse Practitioner",
+      "category": "Healthcare",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Project Manager",
+      "category": "Operations",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Project Manager",
+      "category": "Operations",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Physical Therapist",
+      "category": "Healthcare",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Shift Supervisor",
+      "category": "Retail",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "General Manager",
+      "category": "Operations",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Retail Merchandiser",
+      "category": "Retail",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Medical Receptionist",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Account Executive",
+      "category": "Sales",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Account Manager",
+      "category": "Sales",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Account Manager",
+      "category": "Sales",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Behavior Analyst",
+      "category": "Sales",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Account Executive",
+      "category": "Sales",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Sales Manager",
+      "category": "Sales",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Sales Director",
+      "category": "Sales",
+      "bachelors_job": true
+    },
+  
+    {
+      "job_title": "Social Worker",
+      "category": "Healthcare",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Warehouse Associate",
+      "category": "Logistics",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Assistant General Manager",
+      "category": "Operations",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Executive Assistant",
+      "category": "Administrative",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Store Associate",
+      "category": "Retail",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Software Engineer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Software Engineer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Staff Software Engineer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Front-End Engineer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Full-Stack Engineer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Full-Stack Engineer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Sales Representative",
+      "category": "Sales",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Technical Program Manager",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Research Analyst",
+      "category": "Finance",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "HR Business Partner",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Field Marketing Representative",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Mobile App Developer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Financial Analyst",
+      "category": "Finance",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Finance Manager",
+      "category": "Finance",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Marketing Manager",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Marketing Manager",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Human Resources Generalist",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Partnerships Manager",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Partnerships Director",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Partnerships Associate",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "FP&A Analyst",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "FP&A Associate",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "FP&A Manager",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Director of FP&A",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Partner",
+      "category": "Finance",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Recruiter",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Head of Recruiting",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "HR Manager",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Business Operations Analyst",
+      "category": "Finance",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Business Operations Manager",
+      "category": "Finance",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Business Operations Director",
+      "category": "Finance",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Data Analyst",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Data Analyst",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Data Scientist",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Data Scientist",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Staff Data Scientist",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Business Analyst",
+      "category": "Operations",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Business Analyst",
+      "category": "Operations",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Site Reliability Engineer",
+      "category": "Operations",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Site Reliability Engineer",
+      "category": "Operations",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "IT Support Specialist",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Marketing Specialist",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Consultant",
+      "category": "Operations",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Managing Director",
+      "category": "Finance",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Engineering Manager",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Engineering Director",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Marketing Analyst",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Junior Software Engineer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Software Developer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Software Developer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Product Manager",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Associate Product Manager",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Product Marketing Manager",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Data Analyst",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Data Scientist",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Data Engineer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Data Engineer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Business Analyst",
+      "category": "Operations",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Technical Writer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Technical Writer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Content Designer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Content Designer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Content Design Manager",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Site Reliability Engineer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Solutions Architect",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Solutions Engineer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Solutions Engineer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Quality Assurance Engineer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Recruiting Coordinator",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Forward-Deployed Engineer",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Forward-Deployed Engineer",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Management Trainee",
+      "category": "Operations",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Chemical Engineer",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Chemical Engineer",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Civil Engineer",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Civil Engineer",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Civil Engineering Manager",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Electrical Engineer",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Electrical Engineer",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Electrical Engineering Manager",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Industrial Engineer",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Industrial Engineer",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Industrial Engineering Manager",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Manufacturing Engineer",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Manufacturing Engineer",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+  
+    {
+      "job_title": "Mechanical Engineer",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Mechanical Engineer",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Mechanical Engineering Manager",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Systems Engineer",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Systems Engineer",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Systems Engineering Manager",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Outside Sales Representative",
+      "category": "Sales",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Real Estate Agent",
+      "category": "Sales",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Insurance Sales Agent",
+      "category": "Sales",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Customer Service Associate",
+      "category": "Customer Service",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Gas Station Attendant",
+      "category": "Customer Service",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Security Guard",
+      "category": "Security",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Security Officer",
+      "category": "Security",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Bouncer",
+      "category": "Security",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Private Investigator",
+      "category": "Security",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Police Officer",
+      "category": "Law Enforcement",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Assistant Manager",
+      "category": "Operations",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Team Leader",
+      "category": "Operations",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Leasing Manager",
+      "category": "Operations",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Funeral Director",
+      "category": "Operations",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Safety Inspector",
+      "category": "Operations",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Bookkeeper",
+      "category": "Finance",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Teller",
+      "category": "Finance",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Tax Preparer",
+      "category": "Finance",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Loan Closer",
+      "category": "Finance",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Licensed Practical Nurse",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Medical Assistant",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Pharmacy Technician",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Direct Support Professional",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Home Health Aide",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Dental Assistant",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Caregiver",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Phlebotomist",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Patient Care Technician",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Certified Nursing Assistant",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Field Sales Executive",
+      "category": "Sales",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "IT Field Technician",
+      "category": "Sales",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Field Sales Representative",
+      "category": "Sales",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Personal Care Aide",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Medical Receptionist",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Medical Coder",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Medical Billing Specialist",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Ultrasound Technician",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Radiologic Technologist",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Medical Laboratory Technician",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Respiratory Therapist",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Veterinary Technician",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Childcare Worker",
+      "category": "Education",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Preschool Teacher",
+      "category": "Education",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Brand Designer",
+      "category": "Design",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Brand Designer",
+      "category": "Design",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Brand Marketer",
+      "category": "Design",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Elementary School Teacher",
+      "category": "Education",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "High School Teacher",
+      "category": "Education",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Special Education Teacher",
+      "category": "Education",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Librarian",
+      "category": "Education",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Systems Analyst",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Systems Administrator",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Network Administrator",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Network Engineer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Help Desk Technician",
+      "category": "IT",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Cybersecurity Analyst",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "DevOps Engineer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Cloud Engineer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Quality Assurance Analyst",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "IT Manager",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Database Administrator",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Web Developer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Graphic Designer",
+      "category": "Design",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "UX Designer",
+      "category": "Design",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior UX Designer",
+      "category": "Design",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Product Designer",
+      "category": "Design",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Product Designer",
+      "category": "Design",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Staff Product Designer",
+      "category": "Design",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Interior Designer",
+      "category": "Design",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Chef",
+      "category": "Hospitality",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Baker",
+      "category": "Hospitality",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Hair Stylist",
+      "category": "Personal Care",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Massage Therapist",
+      "category": "Personal Care",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Social Media Manager",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Copywriter",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Copywriter",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Public Relations Specialist",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Head of Public Relations",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Personal Trainer",
+      "category": "Personal Care",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Bus Driver",
+      "category": "Logistics",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Dispatcher",
+      "category": "Logistics",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Package Handler",
+      "category": "Logistics",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Logistics Coordinator",
+      "category": "Logistics",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Logistics Manager",
+      "category": "Logistics",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Delivery Driver",
+      "category": "Logistics",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Truck Driver",
+      "category": "Logistics",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Store Manager",
+      "category": "Retail",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Assistant Store Manager",
+      "category": "Retail",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Cashier",
+      "category": "Retail",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Crew Member",
+      "category": "Hospitality",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Team Member",
+      "category": "Hospitality",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Cook",
+      "category": "Hospitality",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Line Cook",
+      "category": "Hospitality",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Server",
+      "category": "Hospitality",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Bartender",
+      "category": "Hospitality",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Dishwasher",
+      "category": "Hospitality",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Host/Hostess",
+      "category": "Hospitality",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Housekeeper",
+      "category": "Hospitality",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Direct Support Professional",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Maintenance Technician",
+      "category": "Maintenance",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Maintenance Worker",
+      "category": "Maintenance",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Maintenance Manager",
+      "category": "Maintenance",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Janitor",
+      "category": "Maintenance",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Machine Operator",
+      "category": "Manufacturing",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Welder",
+      "category": "Manufacturing",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Machinist",
+      "category": "Manufacturing",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Assembler",
+      "category": "Manufacturing",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Quality Control Inspector",
+      "category": "Manufacturing",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Production Worker",
+      "category": "Manufacturing",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Production Supervisor",
+      "category": "Manufacturing",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Construction Manager",
+      "category": "Construction",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Construction Worker",
+      "category": "Construction",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Boilermaker",
+      "category": "Construction",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Construction Scheduler",
+      "category": "Construction",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Electrician",
+      "category": "Construction",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Plumber",
+      "category": "Construction",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Carpenter",
+      "category": "Construction",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "HVAC Technician",
+      "category": "Construction",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Automotive Mechanic",
+      "category": "Maintenance",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Automotive Technician",
+      "category": "Maintenance",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Automotive Painter",
+      "category": "Maintenance",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Car Wash Attendant",
+      "category": "Maintenance",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Environmental Technician",
+      "category": "Engineering",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Plant Operator",
+      "category": "Manufacturing",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Safety Manager",
+      "category": "Operations",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Probation Officer",
+      "category": "Law Enforcement",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Park Ranger",
+      "category": "Public Safety",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Pharmacist",
+      "category": "Healthcare",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Dental Hygienist",
+      "category": "Healthcare",
+      "bachelors_job": false
+    },
+    {
+      "job_title": "Mental Health Counselor",
+      "category": "Healthcare",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Veterinarian",
+      "category": "Healthcare",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Attorney",
+      "category": "Legal",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Paralegal",
+      "category": "Legal",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Compliance Officer",
+      "category": "Legal",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Mediator",
+      "category": "Legal",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Arbitrator",
+      "category": "Legal",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Contract Specialist",
+      "category": "Legal",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Political Analyst",
+      "category": "Legal",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Policy Analyst",
+      "category": "Administrative",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Policy Manager",
+      "category": "Administrative",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Economist",
+      "category": "Finance",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Senior Economist",
+      "category": "Finance",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Investment Banker",
+      "category": "Finance",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Stockbroker",
+      "category": "Finance",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "E-commerce Manager",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Communications Manager",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Communications Analyst",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Communications Director",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Digital Marketing Specialist",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Chief Executive Officer",
+      "category": "Operations",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Chief Financial Officer",
+      "category": "Finance",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Chief Operating Officer",
+      "category": "Operations",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Chief Technology Officer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Chief Marketing Officer",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Chief Information Officer",
+      "category": "IT",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "HR Director",
+      "category": "HR",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Vice President of Sales",
+      "category": "Sales",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Vice President of Marketing",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Vice President of Operations",
+      "category": "Operations",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Director of Operations",
+      "category": "Operations",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Director of Marketing",
+      "category": "Marketing",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Director of Sales",
+      "category": "Sales",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Director of Engineering",
+      "category": "Engineering",
+      "bachelors_job": true
+    },
+    {
+      "job_title": "Director of Finance",
+      "category": "Finance",
+      "bachelors_job": true
+    }
+    
+  ]

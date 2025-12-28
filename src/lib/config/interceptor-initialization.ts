@@ -1,26 +1,12 @@
 // InterceptorInitialization.tsx
-"use client";
+// This file is kept for backward compatibility but is no longer needed
+// The interceptor now automatically gets tokens from tokenService
+// You can remove this file if it's not used anywhere
 
-import { useEffect } from "react";
-import setup, { setCurrentAccessToken } from "@/lib/config/axios-interceptor";
-import tokenService from "@/services/token.service";
+import setup from "@/lib/config/axios-interceptor";
 
-export default function InterceptorInitialization({
-  accessToken,
-}: {
-  accessToken: string;
-}) {
-  useEffect(() => {
-    setup();
-  }, []);
-
-  useEffect(() => {
-    // Use the provided accessToken or fallback to the one from TokenService
-    const token = accessToken || tokenService.getLocalAccessToken();
-    if (token) {
-      setCurrentAccessToken(token);
-    }
-  }, [accessToken]);
-
+export default function InterceptorInitialization() {
+  // Setup interceptors once
+  setup();
   return null;
 }

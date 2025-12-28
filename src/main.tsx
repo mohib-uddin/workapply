@@ -4,6 +4,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import App from "./App";
 import "./styles/index.css";
 import { Toaster } from "sonner";
+import setupAxiosInterceptors from "./lib/config/axios-interceptor";
+
+// Initialize axios interceptors
+setupAxiosInterceptors();
 
 const queryClient = new QueryClient();
 

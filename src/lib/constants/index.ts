@@ -2,7 +2,14 @@
 export const LOCATION_FILTERS = [];
 export const API_BASEURL = import.meta.env.VITE_API_BASEURL;
 
-export const PUBLIC_ENDPOINTS = ["/api/v1/users/register", "/api/v1/auth"];
+// Public endpoints that don't require authentication
+export const PUBLIC_ENDPOINTS = [
+  "/api/v1/users/register",
+  "/api/v1/auth",
+  "/api/v1/users/password/reset/trigger",
+  "/api/v1/users/password/reset",
+  "/api/v1/users/email/verify",
+];
 
 export const LANGUAGES = [
   "English",

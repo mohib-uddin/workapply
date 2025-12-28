@@ -1,7 +1,9 @@
 import { useState, useRef } from 'react';
-import svgPaths from "@/components/ui/icons/onboarding-common-svg";
+import svgPaths from "@/components/ui/icons/onboarding-step-svg";
 import imgLogo4 from "figma:asset/183455f9c95614951c915b43688a9887b44c6a17.png";
 import { BackgroundDecor } from "@/components/ui/BackgroundDecor";
+import { useUploadResume } from "@/services/resume-upload.service";
+import { toast } from "sonner";
 
 function NotificationIcon() {
   return (
@@ -72,7 +74,9 @@ interface UploadResumePageProps {
 export function UploadResumePage({ userInitials = "SB", onUploadComplete }: UploadResumePageProps) {
   const [dragActive, setDragActive] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const uploadResumeMutation = useUploadResume();
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -101,29 +105,40 @@ export function UploadResumePage({ userInitials = "SB", onUploadComplete }: Uplo
     }
   };
 
-  const handleFile = (file: File) => {
+  const handleFile = async (file: File) => {
     const validTypes = ['application/pdf', 'image/png'];
     const maxSize = 10 * 1024 * 1024; // 10MB
 
     if (!validTypes.includes(file.type)) {
-      alert('Please upload a PDF or PNG file');
+      toast.error('Please upload a PDF or PNG file');
       return;
     }
 
     if (file.size > maxSize) {
-      alert('File size must be less than 10MB');
+      toast.error('File size must be less than 10MB');
       return;
     }
 
     setUploadedFile(file);
-    console.log('File uploaded:', file.name);
+    setIsUploading(true);
 
-    // Trigger navigation to onboarding step after a short delay
-    setTimeout(() => {
-      if (onUploadComplete) {
-        onUploadComplete();
+    try {
+      const result = await uploadResumeMutation.mutateAsync(file);
+      if (result.success) {
+        // Trigger navigation to onboarding step after a short delay
+        setTimeout(() => {
+          if (onUploadComplete) {
+            onUploadComplete();
+          }
+        }, 1500);
+      } else {
+        setIsUploading(false);
+        setUploadedFile(null);
       }
-    }, 1500);
+    } catch (error) {
+      setIsUploading(false);
+      setUploadedFile(null);
+    }
   };
 
   const onBrowseClick = () => {
@@ -154,7 +169,7 @@ export function UploadResumePage({ userInitials = "SB", onUploadComplete }: Uplo
           {/* Upload Area */}
           <div className="w-full relative">
             {/* Progress Bar (shown when file is uploaded) */}
-            {uploadedFile && (
+            {(uploadedFile || isUploading) && (
               <div className="absolute top-[2px] left-[2px] h-[8px] lg:h-[10px] bg-[#faf9f6] rounded-[5.5px] w-[50%] z-10" />
             )}
 
@@ -200,9 +215,9 @@ export function UploadResumePage({ userInitials = "SB", onUploadComplete }: Uplo
                 </p>
               </div>
 
-              {uploadedFile && (
+              {(uploadedFile || isUploading) && (
                 <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[14px] lg:text-[16px] xl:text-[18px] leading-[1.2] mt-[8px]">
-                  Uploaded: {uploadedFile.name}
+                  {isUploading ? 'Uploading...' : `Uploaded: ${uploadedFile?.name}`}
                 </p>
               )}
             </div>
