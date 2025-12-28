@@ -1,11 +1,12 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import svgPathsSubscription from "@/components/ui/icons/subscription-svg";
 import imgWaveCircleWhite from "figma:asset/85ef7a7284b26057657fc5cbaeefab0d1429915e.png";
 import { BackgroundDecor } from "@/components/ui/BackgroundDecor";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import SubscriptionService, { PricingPlan } from '@/services/subscription.service';
 import { Spinner } from '@/components/ui/Spinner';
+import { toast } from 'sonner';
 function PlanCard({ plan }: { plan: PricingPlan }) {
     const { useCreateCheckoutSession } = SubscriptionService();
     const checkoutMutation = useCreateCheckoutSession();
@@ -21,8 +22,8 @@ function PlanCard({ plan }: { plan: PricingPlan }) {
                 failureUri: failureUrl
             });
 
-            if (response.checkoutUrl) {
-                window.location.href = response.checkoutUrl;
+            if (response.checkoutLink) {
+                window.location.href = response.checkoutLink;
             }
         } catch (error) {
             console.error('Checkout error:', error);
@@ -91,9 +92,19 @@ function PlanCard({ plan }: { plan: PricingPlan }) {
 }
 
 export function SubscriptionPlans({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'queue' | 'applications' | 'profile') => void }) {
+    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const { useFetchPricingPlans } = SubscriptionService();
     const { data: plans, isLoading, isError } = useFetchPricingPlans();
+
+    React.useEffect(() => {
+        const checkoutStatus = searchParams.get('checkout');
+        if (checkoutStatus === 'cancel') {
+            toast.error('Payment cancelled. Please try again when you\'re ready.');
+            // Clear the param
+            navigate('/subscriptions', { replace: true });
+        }
+    }, [searchParams, navigate]);
 
     return (
         <DashboardLayout currentTab="profile" onNavigate={onNavigate} showBackground={false} contentScrollable={true}>

@@ -9,9 +9,38 @@ import { BackgroundDecor } from "@/components/ui/BackgroundDecor";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import SubscriptionService from '@/services/subscription.service';
 import UserService from '@/services/user.service';
+import { useFetchResume } from '@/services/resume-upload.service';
+import { Spinner } from '@/components/ui/Spinner';
 
 // Left Sidebar - Profile Section
 function LeftSidebar() {
+  const navigate = useNavigate();
+  const { useFetchCurrentUser, useFetchUserOnboardingData } = UserService();
+  const { data: user } = useFetchCurrentUser();
+  const { data: onboarding } = useFetchUserOnboardingData();
+  const { data: resume } = useFetchResume();
+
+  const primaryJobTitle = onboarding?.jobTitle?.[0] || 'Member';
+  const location = onboarding?.zipCode ? `${onboarding.zipCode}` : 'United States';
+
+  // Format last uploaded date
+  const lastUpload = resume?.data?.[0]?.uploadedAt
+    ? new Date(resume.data[0].uploadedAt).toLocaleString('en-US', {
+      month: 'numeric', day: 'numeric', year: 'numeric',
+      hour: 'numeric', minute: 'numeric', hour12: true
+    }) + ' ' + (new Intl.DateTimeFormat().resolvedOptions().timeZone === 'America/Los_Angeles' ? 'PDT' : '')
+    : 'No resume uploaded';
+
+  const handlePreview = () => {
+    if (resume?.data?.[0]?.fileUrl) {
+      window.open(resume.data[0].fileUrl, '_blank');
+    }
+  };
+
+  const handleUploadClick = () => {
+    navigate('/upload');
+  };
+
   return (
     <div className="w-full lg:w-[311px] bg-[#0f0f0f] flex flex-col relative overflow-y-auto shrink-0 border-r border-[#1a1a1a]">
       <BackgroundDecor />
@@ -27,7 +56,7 @@ function LeftSidebar() {
                   <img alt="Profile" className="block max-w-none size-full rounded-full" src={imgProfile} />
                 </div>
                 <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#faf9f6] text-[28px] text-center">
-                  <p className="leading-[28px]">Michael Greenbaum</p>
+                  <p className="leading-[28px]">{user?.name || 'User'}</p>
                 </div>
               </div>
 
@@ -43,7 +72,7 @@ function LeftSidebar() {
                       </svg>
                     </div>
                     <div className="basis-0 flex flex-col font-['Pavanam',sans-serif] grow justify-center leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[#faf9f6] text-[16px]">
-                      <p className="leading-[18px]">Software Engineer</p>
+                      <p className="leading-[18px]">{primaryJobTitle}</p>
                     </div>
                   </div>
 
@@ -55,7 +84,7 @@ function LeftSidebar() {
                       </svg>
                     </div>
                     <div className="basis-0 flex flex-col font-['Pavanam',sans-serif] grow justify-center leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[#faf9f6] text-[16px]">
-                      <p className="leading-[18px]">michael@gmail.com</p>
+                      <p className="leading-[18px]">{user?.email || ''}</p>
                     </div>
                   </div>
 
@@ -67,7 +96,7 @@ function LeftSidebar() {
                       </svg>
                     </div>
                     <div className="basis-0 flex flex-col font-['Pavanam',sans-serif] grow justify-center leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[#faf9f6] text-[16px]">
-                      <p className="leading-[18px]">New York, NY</p>
+                      <p className="leading-[18px]">{location}</p>
                     </div>
                   </div>
                 </div>
@@ -75,26 +104,16 @@ function LeftSidebar() {
                 {/* Socials */}
                 <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 w-full">
                   {/* LinkedIn */}
-                  <div className="content-stretch flex gap-[10px] items-center justify-center leading-[0] not-italic relative shrink-0 w-full">
-                    <div className="flex flex-col font-['Roboto_Flex',sans-serif] font-semibold justify-center relative shrink-0 text-[14px] text-nowrap text-white">
-                      <p className="leading-[12px]">in</p>
+                  {onboarding?.profileLinks?.map((link: any, idx: number) => (
+                    <div key={idx} className="content-stretch flex gap-[10px] items-center justify-center leading-[0] not-italic relative shrink-0 w-full">
+                      <div className="flex flex-col font-['Roboto_Flex',sans-serif] font-semibold justify-center relative shrink-0 text-[14px] text-nowrap text-white">
+                        <p className="leading-[12px]">{link.type === 'linkedin' ? 'in' : link.type[0].toUpperCase()}</p>
+                      </div>
+                      <div className="basis-0 flex flex-col font-['Pavanam',sans-serif] grow justify-center min-h-px min-w-px relative shrink-0 text-[#faf9f6] text-[16px]">
+                        <p className="leading-[18px] truncate">{link.url.replace(/^https?:\/\/(www\.)?/, '')}</p>
+                      </div>
                     </div>
-                    <div className="basis-0 flex flex-col font-['Pavanam',sans-serif] grow justify-center min-h-px min-w-px relative shrink-0 text-[#faf9f6] text-[16px]">
-                      <p className="leading-[18px]">linkedin.com/in/mchel</p>
-                    </div>
-                  </div>
-
-                  {/* Portfolio */}
-                  <div className="content-stretch flex gap-[10px] items-center justify-center relative shrink-0 w-full">
-                    <div className="relative shrink-0 size-[12px]">
-                      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 12 12">
-                        <path d={svgPaths.p28975300} fill="#FAF9F6" />
-                      </svg>
-                    </div>
-                    <div className="basis-0 flex flex-col font-['Pavanam',sans-serif] grow justify-center leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[#faf9f6] text-[16px]">
-                      <p className="leading-[18px]">portfolio.com</p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
 
                 {/* Applications Sent */}
@@ -135,17 +154,20 @@ function LeftSidebar() {
               <div className="content-stretch flex flex-col gap-[5px] items-start relative shrink-0 w-full">
                 <div className="content-stretch flex items-center relative shrink-0 w-full">
                   <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#faf9f6] text-[16px] text-center text-nowrap">
-                    <p className="leading-[18px]">Michael_Greenbaum_Resume.pdf</p>
+                    <p className="leading-[18px] truncate max-w-[200px]">{resume?.data?.[0]?.fileName || 'No file'}</p>
                   </div>
                 </div>
                 <div className="content-stretch flex items-center relative shrink-0 w-full">
                   <div className="basis-0 flex flex-col font-['Pavanam',sans-serif] grow justify-center leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[#faf9f6] text-[16px]">
-                    <p className="leading-[18px]">Last Uploaded: 1/7/2025, 1:24 AM PDT</p>
+                    <p className="leading-[18px]">Last Uploaded: {lastUpload}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="content-stretch flex gap-[2px] items-start relative shrink-0 cursor-pointer">
+              <div
+                className="content-stretch flex gap-[2px] items-start relative shrink-0 cursor-pointer"
+                onClick={handlePreview}
+              >
                 <p className="font-['Pavanam',sans-serif] leading-[normal] not-italic relative shrink-0 text-[14px] text-nowrap text-white underline">Preview Resume</p>
                 <div className="flex items-center justify-center relative shrink-0">
                   <div className="flex-none scale-y-[-100%]">
@@ -158,7 +180,10 @@ function LeftSidebar() {
                 </div>
               </div>
 
-              <div className="bg-[#faf9f6] relative rounded-[35px] shrink-0 w-full cursor-pointer hover:bg-[#e0e0e0] transition-colors">
+              <div
+                className="bg-[#faf9f6] relative rounded-[35px] shrink-0 w-full cursor-pointer hover:bg-[#e0e0e0] transition-colors"
+                onClick={handleUploadClick}
+              >
                 <div className="flex flex-row items-center justify-center size-full">
                   <div className="content-stretch flex gap-[4px] items-center justify-center px-[12px] py-[8px] relative w-full">
                     <p className="font-['Pavanam',sans-serif] leading-[18px] not-italic relative shrink-0 text-[16px] text-black text-nowrap">Upload</p>
@@ -217,6 +242,24 @@ function EditButton() {
 function RightContent() {
   const [activeTab, setActiveTab] = useState<'profile' | 'subscription'>('profile');
   const navigate = useNavigate();
+  const { useFetchUserOnboardingData } = UserService();
+  const { data: onboarding, isLoading, isError } = useFetchUserOnboardingData();
+
+  if (isLoading) {
+    return (
+      <div className="flex-1 flex items-center justify-center bg-[#0f0f0f]">
+        <Spinner className="size-12 text-[#611dcd]" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex-1 flex items-center justify-center bg-[#0f0f0f]">
+        <p className="text-white text-xl">Failed to load profile details.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 overflow-y-auto relative bg-[#0f0f0f]">
@@ -294,46 +337,50 @@ function RightContent() {
 
                 {/* Values Column */}
                 <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 flex-1">
-                  <div className="content-stretch flex gap-[24px] h-[26px] items-center relative shrink-0 flex-wrap">
-                    <Tag text="Software Engineer" />
-                    <Tag text="Data Engineer" />
-                    <Tag text="Data Analyst" />
+                  <div className="content-stretch flex gap-[8px] items-center relative shrink-0 flex-wrap">
+                    {onboarding?.jobTitle?.map((title: string, idx: number) => (
+                      <Tag key={idx} text={title} />
+                    ))}
                   </div>
-                  <div className="content-stretch flex gap-[24px] h-[26px] items-center relative shrink-0 flex-wrap">
-                    <Tag text="Remote" />
-                    <Tag text="Hybrid" />
+                  <div className="content-stretch flex gap-[8px] items-center relative shrink-0 flex-wrap">
+                    {onboarding?.workLocation?.map((loc: string, idx: number) => (
+                      <Tag key={idx} text={loc.charAt(0).toUpperCase() + loc.slice(1)} />
+                    ))}
                   </div>
-                  <div className="content-stretch flex gap-[24px] h-[26px] items-center relative shrink-0 flex-wrap">
-                    <Tag text="Full time" />
-                    <Tag text="Contract" />
+                  <div className="content-stretch flex gap-[8px] items-center relative shrink-0 flex-wrap">
+                    {onboarding?.workType?.map((type: string, idx: number) => (
+                      <Tag key={idx} text={type.charAt(0).toUpperCase() + type.slice(1)} />
+                    ))}
                   </div>
-                  <div className="content-stretch flex gap-[24px] h-[26px] items-center relative shrink-0 flex-wrap">
-                    <Tag text="Biotechnology" />
-                    <Tag text="Cybersecurity" />
+                  <div className="content-stretch flex gap-[8px] items-center relative shrink-0 flex-wrap">
+                    {onboarding?.industries?.slice(0, 6).map((ind: string, idx: number) => (
+                      <Tag key={idx} text={ind.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ')} />
+                    ))}
+                    {onboarding?.industries && onboarding.industries.length > 6 && <Tag text={`+${onboarding.industries.length - 6} more`} />}
                   </div>
                   <div className="content-stretch flex items-center justify-center p-[4px] relative rounded-[2px] shrink-0 h-[26px]">
                     <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-nowrap text-white">
-                      <p className="leading-[18px]">$98k - $102k</p>
+                      <p className="leading-[18px]">{onboarding?.salaryPreference || 'Not specified'}</p>
                     </div>
                   </div>
                   <div className="content-stretch flex items-center justify-center p-[4px] relative rounded-[2px] shrink-0 h-[26px]">
                     <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-nowrap text-white">
-                      <p className="leading-[18px]">Yes</p>
+                      <p className="leading-[18px]">{onboarding?.relocation === 'yes' ? 'Yes' : 'No'}</p>
                     </div>
                   </div>
                   <div className="content-stretch flex items-center justify-center p-[4px] relative rounded-[2px] shrink-0 h-[26px]">
                     <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-nowrap text-white">
-                      <p className="leading-[18px]">No</p>
+                      <p className="leading-[18px]">{onboarding?.sponsorship === 'yes' ? 'Yes' : 'No'}</p>
                     </div>
                   </div>
                   <div className="content-stretch flex items-center justify-center p-[4px] relative rounded-[2px] shrink-0 h-[26px]">
                     <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-nowrap text-white">
-                      <p className="leading-[18px]">US Citizen</p>
+                      <p className="leading-[18px]">{onboarding?.workAuthorization ? (onboarding.workAuthorization.charAt(0).toUpperCase() + onboarding.workAuthorization.slice(1)) : ''}</p>
                     </div>
                   </div>
                   <div className="content-stretch flex items-center justify-center p-[4px] relative rounded-[2px] shrink-0 h-[26px]">
                     <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-nowrap text-white">
-                      <p className="leading-[18px]">No</p>
+                      <p className="leading-[18px]">{onboarding?.securityClearance === 'yes' ? `Yes (${onboarding.clearanceLevel})` : 'No'}</p>
                     </div>
                   </div>
                 </div>
@@ -362,22 +409,22 @@ function RightContent() {
                 <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 flex-1">
                   <div className="content-stretch flex items-center justify-center p-[4px] relative rounded-[2px] shrink-0 h-[26px]">
                     <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-nowrap text-white">
-                      <p className="leading-[18px]">Currently employed</p>
+                      <p className="leading-[18px]">{onboarding?.employmentStatus ? (onboarding.employmentStatus.charAt(0).toUpperCase() + onboarding.employmentStatus.slice(1)) : ''}</p>
                     </div>
                   </div>
                   <div className="content-stretch flex items-center justify-center p-[4px] relative rounded-[2px] shrink-0 h-[26px]">
                     <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-nowrap text-white">
-                      <p className="leading-[18px]">Junior level</p>
+                      <p className="leading-[18px]">{onboarding?.experienceLevel ? (onboarding.experienceLevel.charAt(0).toUpperCase() + onboarding.experienceLevel.slice(1)) : ''} level</p>
                     </div>
                   </div>
                   <div className="content-stretch flex items-center justify-center p-[4px] relative rounded-[2px] shrink-0 h-[26px]">
                     <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-nowrap text-white">
-                      <p className="leading-[18px]">2 years</p>
+                      <p className="leading-[18px]">{onboarding?.yearsExperience} years</p>
                     </div>
                   </div>
                   <div className="content-stretch flex items-center justify-center p-[4px] relative rounded-[2px] shrink-0 h-[26px]">
                     <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-white">
-                      <p className="leading-[18px]">B.S. Informatics, University of California, Berkeley</p>
+                      <p className="leading-[18px]">{onboarding?.educationLevel ? (onboarding.educationLevel.charAt(0).toUpperCase() + onboarding.educationLevel.slice(1)) : ''}</p>
                     </div>
                   </div>
                 </div>
@@ -406,22 +453,22 @@ function RightContent() {
                 <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 flex-1">
                   <div className="content-stretch flex items-center justify-center p-[4px] relative rounded-[2px] shrink-0 h-[26px]">
                     <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-nowrap text-white">
-                      <p className="leading-[18px]">Male</p>
+                      <p className="leading-[18px]">{onboarding?.gender ? (onboarding.gender.charAt(0).toUpperCase() + onboarding.gender.slice(1)) : ''}</p>
                     </div>
                   </div>
                   <div className="content-stretch flex items-center justify-center p-[4px] relative rounded-[2px] shrink-0 h-[26px]">
                     <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-nowrap text-white">
-                      <p className="leading-[18px]">Heterosexual</p>
+                      <p className="leading-[18px]">{onboarding?.sexualOrientation ? (onboarding.sexualOrientation.charAt(0).toUpperCase() + onboarding.sexualOrientation.slice(1)) : ''}</p>
                     </div>
                   </div>
                   <div className="content-stretch flex items-center justify-center p-[4px] relative rounded-[2px] shrink-0 h-[26px]">
                     <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-nowrap text-white">
-                      <p className="leading-[18px]">American</p>
+                      <p className="leading-[18px]">{onboarding?.ethnicity ? (onboarding.ethnicity.charAt(0).toUpperCase() + onboarding.ethnicity.slice(1)) : ''}</p>
                     </div>
                   </div>
                   <div className="content-stretch flex items-center justify-center p-[4px] relative rounded-[2px] shrink-0 h-[26px]">
                     <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[16px] text-nowrap text-white">
-                      <p className="leading-[18px]">None</p>
+                      <p className="leading-[18px]">{onboarding?.disability === 'yes' ? 'Yes' : 'None'}</p>
                     </div>
                   </div>
                 </div>
@@ -443,24 +490,24 @@ function SubscriptionDetails() {
 
   if (!subscription) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] relative px-[20px]">
-        <div className="relative bg-[rgba(26,26,26,0.7)] rounded-[4px] p-[32px] lg:p-[48px] max-w-[800px] w-full flex flex-col items-center text-center gap-[32px] z-10 overflow-hidden">
+      <div className="flex flex-col items-center justify-center min-h-[300px] relative px-[20px]">
+        <div className="relative bg-[rgba(26,26,26,0.7)] rounded-[4px] p-[24px] lg:p-[32px] max-w-[700px] w-full flex flex-col items-center text-center gap-[24px] z-10 overflow-hidden">
           <div aria-hidden="true" className="absolute border-[#9ba1a5] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
 
-          <div className="flex flex-col gap-[16px] items-center relative z-10">
-            <p className="font-['Pavanam',sans-serif] leading-[32px] lg:leading-[40px] text-[24px] lg:text-[32px] text-white">
-              Looks like you're still on a free plan! Upgrade to unlock premium tools like Auto Apply and get the most out of WorkApply.
+          <div className="flex flex-col gap-[12px] items-center relative z-10">
+            <p className="font-['Pavanam',sans-serif] leading-[28px] lg:leading-[32px] text-[20px] lg:text-[24px] text-[#faf9f6]">
+              Looks like you&apos;re still on a free plan! Upgrade to unlock premium tools like Auto Apply and get the most out of WorkApply.
             </p>
           </div>
 
           <button
             onClick={() => navigate('/subscriptions')}
-            className="bg-[#faf9f6] rounded-[35px] px-[24px] py-[12px] flex items-center gap-[8px] cursor-pointer hover:bg-white transition-all border-none relative z-10"
+            className="bg-[#faf9f6] rounded-[35px] px-[20px] py-[10px] flex items-center gap-[8px] cursor-pointer hover:bg-white transition-all border-none relative z-10 group"
           >
-            <p className="font-['Pavanam',sans-serif] leading-tight text-[20px] lg:text-[24px] text-black font-medium">
+            <p className="font-['Pavanam',sans-serif] leading-tight text-[18px] lg:text-[20px] text-black font-medium">
               View Pricing Plans
             </p>
-            <div className="size-[16px] lg:size-[20px]">
+            <div className="size-[14px] lg:size-[16px] group-hover:translate-x-1 transition-transform">
               <svg className="block size-full" fill="none" viewBox="0 0 24 24">
                 <path d="M5 12h14M12 5l7 7-7 7" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -471,10 +518,137 @@ function SubscriptionDetails() {
     );
   }
 
+  const plan = subscription.pricingPlan;
+  const renewalDate = new Date(subscription.expiresAt).toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
+
   return (
-    <div className="max-w-[1000px] mx-auto">
-      <div className="bg-[#1a1a1a] rounded-[4px] p-[20px] lg:p-[32px]">
-        <p className="text-white text-xl">You have an active subscription: <span className="text-[#00d1ff] font-bold">{subscription?.pricingPlan?.name}</span></p>
+    <div className="max-w-[900px] mx-auto flex flex-col gap-[24px]">
+      {/* Main Subscription Card */}
+      <div className="bg-[rgba(26,26,26,0.7)] rounded-[4px] relative overflow-hidden">
+        <div aria-hidden="true" className="absolute border-[#9ba1a5] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[5px]" />
+
+        {/* Glow effect */}
+        <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-[#611dcd] opacity-10 blur-[100px] -mr-32 -mt-32 pointer-events-none" />
+
+        <div className="p-[24px] lg:p-[32px] relative z-10">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-[24px] mb-[32px]">
+            <div className="flex flex-col gap-[8px]">
+              <div className="flex items-center gap-[12px]">
+                <h2 className="font-['Pavanam',sans-serif] text-[24px] lg:text-[32px] text-[#faf9f6] leading-tight">
+                  {plan?.name} Plan
+                </h2>
+                <div className="bg-[#611dcd] rounded-[4px] px-[10px] py-[4px] flex items-center gap-[6px]">
+                  <div className="size-[8px] rounded-full bg-white animate-pulse" />
+                  <span className="text-white text-[12px] font-['Pavanam',sans-serif] leading-tight tracking-wider uppercase">Active</span>
+                </div>
+              </div>
+              <p className="text-[#faf9f6] text-[16px] lg:text-[18px] font-['Pavanam',sans-serif] leading-[1.2] opacity-70 max-w-[450px]">
+                {plan?.description}
+              </p>
+            </div>
+
+            <div className="flex flex-col items-start lg:items-end gap-[4px]">
+              <div className="flex items-baseline gap-[4px]">
+                <span className="text-[#faf9f6] text-[28px] lg:text-[36px] font-['Pavanam',sans-serif] leading-tight">${plan?.price}</span>
+                <span className="text-[#faf9f6] text-[16px] font-['Pavanam',sans-serif] opacity-50">/{plan?.interval === 'Monthly' ? 'Month' : plan?.interval}</span>
+              </div>
+              <p className="text-[#faf9f6] text-[14px] lg:text-[16px] font-['Pavanam',sans-serif] opacity-60">
+                {subscription.autoRenew ? 'Next billing:' : 'Expires:'} <span className="text-white font-medium">{renewalDate}</span>
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-[32px] pb-[32px] border-b border-[#faf9f6]/10">
+            {/* Features Column */}
+            <div className="flex flex-col gap-[16px]">
+              <h3 className="text-[#faf9f6] text-[14px] lg:text-[16px] font-['Pavanam',sans-serif] opacity-50 uppercase tracking-widest font-semibold">
+                Included Features
+              </h3>
+              <div className="flex flex-col gap-[10px]">
+                {plan?.features?.map((feature: string, idx: number) => (
+                  <div key={idx} className="flex items-start gap-[10px]">
+                    <div className="mt-[4px] shrink-0 size-[16px]">
+                      <svg className="block size-full" fill="none" viewBox="0 0 20 20">
+                        <path d="M16.6667 5L7.5 14.1667L3.33333 10" stroke="#faf9f6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                    <p className="text-[#faf9f6] text-[16px] lg:text-[18px] font-['Pavanam',sans-serif] leading-tight">{feature}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Plan Config/Usage Column */}
+            <div className="flex flex-col gap-[16px]">
+              <h3 className="text-[#faf9f6] text-[14px] lg:text-[16px] font-['Pavanam',sans-serif] opacity-50 uppercase tracking-widest font-semibold">
+                Plan Configuration
+              </h3>
+              <div className="flex flex-col gap-[16px]">
+                <div className="relative shrink-0 w-full">
+                  <div aria-hidden="true" className="absolute border-[#faf9f6] border-[0px_0px_0px_2px] border-solid inset-0 pointer-events-none opacity-40" />
+                  <div className="flex flex-row items-center p-[12px]">
+                    <div className="flex flex-col gap-[2px] w-full">
+                      <p className="text-[#faf9f6] text-[12px] font-['Pavanam',sans-serif] opacity-50">Daily Applications</p>
+                      <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[16px] lg:text-[18px]">{plan?.config?.jobsToApplyEachDay || 0} applications/day</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-[10px]">
+                  <div className={`size-[10px] rounded-full ${subscription.autoRenew ? 'bg-white' : 'bg-red-500 opacity-80'}`} />
+                  <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[16px] lg:text-[18px]">
+                    Auto-Renewal: <span className="font-medium">{subscription.autoRenew ? 'Enabled' : 'Disabled'}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Footer */}
+          <div className="mt-[32px] flex flex-col sm:flex-row gap-[16px] justify-between items-center">
+            <div className="font-['Pavanam',sans-serif] text-[14px] text-[#faf9f6] opacity-50 italic">
+              Member since {subscription?.audit?.createdAt ? new Date(subscription.audit.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'N/A'}
+            </div>
+            <div className="flex gap-[12px] w-full sm:w-auto">
+              <button
+                onClick={() => navigate('/subscriptions')}
+                className="flex-1 sm:flex-none border border-[#faf9f6]/40 text-[#faf9f6] px-[20px] py-[8px] rounded-full hover:bg-[#faf9f6]/10 transition-colors font-['Pavanam',sans-serif] text-[16px] lg:text-[18px]"
+              >
+                Change Plan
+              </button>
+              <button className="flex-1 sm:flex-none bg-[#faf9f6] text-black px-[20px] py-[8px] rounded-full hover:bg-white transition-all font-['Pavanam',sans-serif] text-[16px] lg:text-[18px] font-medium">
+                Manage Billing
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Subscription Help/Support */}
+      <div className="relative bg-[rgba(26,26,26,0.7)] p-[20px] lg:p-[24px] rounded-[4px]">
+        <div aria-hidden="true" className="absolute border-[#9ba1a5] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[5px]" />
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-[20px] relative z-10">
+          <div className="flex items-center gap-[16px]">
+            <div className="bg-[#611dcd]/80 p-[10px] rounded-full shrink-0">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+            </div>
+            <div className="flex flex-col">
+              <p className="text-[#faf9f6] text-[18px] lg:text-[20px] font-['Pavanam',sans-serif] leading-tight">Need help?</p>
+              <p className="text-[#faf9f6] text-[14px] lg:text-[16px] font-['Pavanam',sans-serif] opacity-50">Manual assistance is available 24/7 for {plan?.name} members.</p>
+            </div>
+          </div>
+          <button className="text-white hover:text-white/80 transition-colors font-['Pavanam',sans-serif] text-[16px] underline underline-offset-4 decoration-[#611dcd] decoration-2">
+            Contact Support
+          </button>
+        </div>
       </div>
     </div>
   );

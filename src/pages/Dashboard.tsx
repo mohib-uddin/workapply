@@ -1,9 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import svgPaths from "@/components/ui/icons/dashboard-svg";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import UserService from '@/services/user.service';
+import { toast } from 'sonner';
 
 // Match Circle Component
 function MatchCircle({ percent, pathData }: { percent: string; pathData: string }) {
@@ -132,6 +133,18 @@ function JobCard({
 }
 
 export function Dashboard({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'queue' | 'applications' | 'profile') => void }) {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const checkoutStatus = searchParams.get('checkout');
+    if (checkoutStatus === 'success') {
+      toast.success('Subscription activated! You can now start applying to jobs.');
+      // Clear the param
+      navigate('/dashboard', { replace: true });
+    }
+  }, [searchParams, navigate]);
+
   const jobs = [
     {
       match: '74',

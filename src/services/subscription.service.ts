@@ -26,7 +26,7 @@ export interface CheckoutRequest {
 }
 
 export interface CheckoutResponse {
-    checkoutUrl: string;
+    checkoutLink: string;
 }
 
 const SubscriptionService = () => {
