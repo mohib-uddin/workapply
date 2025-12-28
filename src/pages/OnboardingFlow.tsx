@@ -17,7 +17,7 @@ export function OnboardingFlow() {
   const { useSubmitOnboardingData, validateOnboardingData } = UserService();
   const submitOnboardingMutation = useSubmitOnboardingData();
   const { data: resumeData, isSuccess: resumeSuccess } = useFetchResume(true);
-  
+
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('upload');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isResumeUploaded, setIsResumeUploaded] = useState(false);
@@ -29,11 +29,11 @@ export function OnboardingFlow() {
       // Check if we have any questions answered
       const hasAnyAnswer = ONBOARDING_QUESTIONS.some(q => {
         const value = data[q.key as keyof typeof data];
-        return value !== null && value !== undefined && 
-               !(Array.isArray(value) && value.length === 0) &&
-               !(typeof value === 'string' && value === '');
+        return value !== null && value !== undefined &&
+          !(Array.isArray(value) && value.length === 0) &&
+          !(typeof value === 'string' && value === '');
       });
-      
+
       if (hasAnyAnswer) {
         setCurrentStep('question');
       } else {
@@ -52,22 +52,22 @@ export function OnboardingFlow() {
 
   const currentQuestion = filteredQuestions[currentQuestionIndex];
 
+  // Check if we should skip to a specific question based on data (only on mount or when currentStep changes to 'question')
   useEffect(() => {
-    // Check if we should skip to a specific question based on data
-    if (currentStep === 'question' && filteredQuestions.length > 0) {
+    if (currentStep === 'question' && currentQuestionIndex === 0) {
       // Find the first unanswered question
-      const firstUnansweredIndex = filteredQuestions.findIndex((q, index) => {
+      const firstUnansweredIndex = filteredQuestions.findIndex((q) => {
         const value = data[q.key as keyof typeof data];
-        return value === null || value === undefined || 
-               (Array.isArray(value) && value.length === 0) ||
-               (typeof value === 'string' && value === '');
+        return value === null || value === undefined ||
+          (Array.isArray(value) && value.length === 0) ||
+          (typeof value === 'string' && value === '');
       });
-      
-      if (firstUnansweredIndex !== -1) {
+
+      if (firstUnansweredIndex !== -1 && firstUnansweredIndex !== 0) {
         setCurrentQuestionIndex(firstUnansweredIndex);
       }
     }
-  }, [currentStep, data, filteredQuestions]);
+  }, [currentStep]); // Only run when currentStep changes
 
   const handleResumeUploadComplete = () => {
     setIsResumeUploaded(true);
@@ -112,7 +112,7 @@ export function OnboardingFlow() {
 
     try {
       const response = await submitOnboardingMutation.mutateAsync(data);
-      
+
       if (response.success) {
         markCompleted();
         toast.success('Profile completed successfully!');

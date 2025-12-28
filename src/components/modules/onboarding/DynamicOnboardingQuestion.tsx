@@ -47,7 +47,7 @@ function ProgressIndicator({ current, total }: { current: number; total: number 
   const progressPercentage = (current / total) * 100;
 
   return (
-    <div className="w-full max-w-[280px] sm:max-w-[400px] lg:max-w-[500px] xl:max-w-[650px] 2xl:max-w-[1000px] flex items-center gap-[10px] lg:gap-[12px] xl:gap-[16px] 2xl:gap-[20px]">
+    <div className="w-[85%] lg:w-[80%] flex items-center gap-[10px] lg:gap-[12px] xl:gap-[16px] 2xl:gap-[20px]">
       <div className="flex-1 relative h-[16px] lg:h-[20px] xl:h-[24px] 2xl:h-[30px]">
         <div className="absolute inset-0 bg-[#1a1a1a] rounded-[1px]" />
         <div
@@ -66,9 +66,9 @@ function BackButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="flex gap-[4px] items-center hover:opacity-80 transition-opacity group"
+      className="flex gap-[6px] items-center hover:opacity-80 transition-all group"
     >
-      <div className="relative size-[18px] lg:size-[20px] xl:size-[22px] 2xl:size-[28px] scale-y-[-1]">
+      <div className="relative size-[18px] lg:size-[20px] xl:size-[22px] 2xl:size-[28px] transition-transform group-hover:-translate-x-1">
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 28 28">
           <path d={svgPaths.pa520dc0} fill="#FAF9F6" />
         </svg>
@@ -130,7 +130,7 @@ export function DynamicOnboardingQuestion({
 
   const handleContinue = () => {
     let answer: any;
-    
+
     if (question.type === 'multi-select' || question.type === 'multi-combobox') {
       if (selectedValues.length === 0) return;
       answer = selectedValues;
@@ -198,8 +198,8 @@ export function DynamicOnboardingQuestion({
         prev.includes(value)
           ? prev.filter(v => v !== value)
           : question.maxSelections && prev.length >= question.maxSelections
-          ? prev
-          : [...prev, value]
+            ? prev
+            : [...prev, value]
       );
     } else {
       setSelectedValue(value);
@@ -220,18 +220,17 @@ export function DynamicOnboardingQuestion({
     switch (question.type) {
       case 'select':
         return (
-          <div className="w-full max-w-[90%] sm:max-w-[85%] lg:max-w-[70%] xl:max-w-[75%] 2xl:max-w-[810px] flex flex-col sm:flex-row gap-[12px] lg:gap-[18px] xl:gap-[24px] 2xl:gap-[40px] mb-[40px] lg:mb-[60px] xl:mb-[76px] 2xl:mb-[96px]">
+          <div className="w-full max-w-[95%] sm:max-w-[600px] lg:max-w-[800px] xl:max-w-[1040px] flex flex-wrap justify-center gap-[12px] lg:gap-[20px] xl:gap-[28px] 2xl:gap-[32px] mb-[40px] lg:mb-[60px] xl:mb-[76px] 2xl:mb-[96px]">
             {question.options?.map((option) => (
               <button
                 key={String(option.value)}
                 onClick={() => setSelectedValue(option.value)}
-                className={`flex-1 bg-[#1a1a1a] rounded-[4px] border px-[10px] py-[8px] lg:px-[12px] lg:py-[10px] xl:px-[14px] xl:py-[12px] 2xl:px-[16px] 2xl:py-[16px] transition-all ${
-                  selectedValue === option.value
-                    ? 'border-[#faf9f6] border-[2px] lg:border-[3px] xl:border-[4px]'
-                    : 'border-[#faf9f6] border-[1px] hover:border-[2px]'
-                }`}
+                className={`min-w-[140px] sm:min-w-[240px] lg:min-w-[280px] xl:min-w-[300px] bg-[#1a1a1a] rounded-[4px] border px-[16px] py-[10px] lg:px-[20px] lg:py-[12px] xl:px-[24px] xl:py-[16px] 2xl:px-[32px] 2xl:py-[20px] transition-all ${selectedValue === option.value
+                  ? 'border-[#faf9f6] border-[2px] lg:border-[3px] xl:border-[4px]'
+                  : 'border-[#faf9f6] border-[1px] hover:border-[2px]'
+                  }`}
               >
-                <p className="font-['Pavanam',sans-serif] text-white text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[28px] 2xl:text-[40px] leading-[1.0]">
+                <p className="font-['Pavanam',sans-serif] text-white text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[32px] leading-[1.2]">
                   {option.label}
                 </p>
               </button>
@@ -240,37 +239,32 @@ export function DynamicOnboardingQuestion({
         );
 
       case 'multi-select':
-        const gridCols = question.gridCols || 1;
-        const gridClass = gridCols === 1 ? 'flex-col' : gridCols === 2 ? 'grid-cols-1 sm:grid-cols-2' : gridCols === 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
-        
         return (
-          <div className="w-full max-w-[90%] sm:max-w-[85%] lg:max-w-[80%] xl:max-w-[75%] 2xl:max-w-[1200px] flex flex-col gap-[16px] lg:gap-[20px] xl:gap-[26px] 2xl:gap-[32px] mb-[40px] lg:mb-[50px] xl:mb-[70px] 2xl:mb-[96px]">
+          <div className="w-full max-w-[95%] sm:max-w-[600px] lg:max-w-[800px] xl:max-w-[1100px] 2xl:max-w-[1300px] flex flex-col gap-[24px] lg:gap-[32px] xl:gap-[40px] 2xl:gap-[48px] mb-[40px] lg:mb-[60px] xl:mb-[76px] 2xl:mb-[96px] items-center">
             {question.showSelectAll && question.multiSelectOptions && (
               <button
                 onClick={handleSelectAll}
-                className={`w-full bg-[#1a1a1a] rounded-[4px] border px-[10px] py-[10px] lg:px-[12px] lg:py-[12px] xl:px-[14px] xl:py-[14px] 2xl:px-[16px] 2xl:py-[16px] transition-all ${
-                  selectedValues.length === question.multiSelectOptions.length
+                className={`w-full max-w-[300px] sm:max-w-[400px] lg:max-w-[500px] bg-[#1a1a1a] rounded-[4px] border px-[10px] py-[10px] lg:px-[12px] lg:py-[12px] xl:px-[14px] xl:py-[14px] 2xl:px-[16px] 2xl:py-[16px] transition-all ${selectedValues.length === question.multiSelectOptions.length
                     ? 'border-[#faf9f6] border-[2px] lg:border-[3px] xl:border-[4px]'
                     : 'border-[#faf9f6] border-[1px] hover:border-[2px]'
-                }`}
+                  }`}
               >
-                <p className="font-['Pavanam',sans-serif] text-white text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[40px] leading-[1.0]">
+                <p className="font-['Pavanam',sans-serif] text-white text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[32px] leading-[1.0]">
                   {question.selectAllLabel || 'Select All'}
                 </p>
               </button>
             )}
-            <div className={`flex ${gridClass} gap-[12px] lg:gap-[20px] xl:gap-[28px] 2xl:gap-[40px]`}>
+            <div className="flex flex-wrap justify-center gap-[12px] lg:gap-[20px] xl:gap-[28px] 2xl:gap-[32px] w-full">
               {question.multiSelectOptions?.map((option) => (
                 <button
                   key={option.value}
                   onClick={() => toggleSelection(option.value)}
-                  className={`bg-[#1a1a1a] rounded-[4px] border px-[10px] py-[10px] lg:px-[12px] lg:py-[12px] xl:px-[14px] xl:py-[14px] 2xl:px-[16px] 2xl:py-[16px] transition-all ${
-                    selectedValues.includes(option.value)
+                  className={`min-w-[140px] sm:min-w-[240px] lg:min-w-[280px] xl:min-w-[300px] bg-[#1a1a1a] rounded-[4px] border px-[16px] py-[10px] lg:px-[20px] lg:py-[12px] xl:px-[24px] xl:py-[16px] 2xl:px-[32px] 2xl:py-[20px] transition-all flex items-center justify-center text-center ${selectedValues.includes(option.value)
                       ? 'border-[#faf9f6] border-[2px] lg:border-[3px] xl:border-[4px]'
                       : 'border-[#faf9f6] border-[1px] hover:border-[2px]'
-                  }`}
+                    }`}
                 >
-                  <p className="font-['Pavanam',sans-serif] text-white text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[40px] leading-[1.0]">
+                  <p className="font-['Pavanam',sans-serif] text-white text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[22px] 2xl:text-[32px] leading-tight">
                     {option.label}
                   </p>
                 </button>
@@ -297,7 +291,7 @@ export function DynamicOnboardingQuestion({
         const sliderMax = question.max || 300000;
         const sliderMin = question.min || 0;
         const sliderStep = question.step || 5000;
-        
+
         return (
           <div className="w-full max-w-[90%] sm:max-w-[85%] lg:max-w-[80%] xl:max-w-[724px] flex flex-col gap-[24px] lg:gap-[32px] xl:gap-[40px] 2xl:gap-[48px] mb-[40px] lg:mb-[50px] xl:mb-[70px] 2xl:mb-[96px]">
             <div className="w-full flex flex-col sm:flex-row gap-[16px] lg:gap-[28px] xl:gap-[48px] 2xl:gap-[64px]">
@@ -408,9 +402,8 @@ export function DynamicOnboardingQuestion({
                           setIsDropdownOpen(false);
                         }
                       }}
-                      className={`w-full px-[16px] lg:px-[20px] xl:px-[24px] py-[8px] lg:py-[10px] xl:py-[12px] text-left hover:bg-[#2a2a2a] transition-colors ${
-                        index !== filteredJobTitles.length - 1 ? 'border-b border-[#9ba1a5]/30' : ''
-                      } ${selectedValues.includes(title) ? 'bg-[#611dcd]/20' : ''}`}
+                      className={`w-full px-[16px] lg:px-[20px] xl:px-[24px] py-[8px] lg:py-[10px] xl:py-[12px] text-left hover:bg-[#2a2a2a] transition-colors ${index !== filteredJobTitles.length - 1 ? 'border-b border-[#9ba1a5]/30' : ''
+                        } ${selectedValues.includes(title) ? 'bg-[#611dcd]/20' : ''}`}
                     >
                       <p className="font-['Pavanam',sans-serif] text-white text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[28px] leading-[1.0]">
                         {title}
@@ -466,17 +459,25 @@ export function DynamicOnboardingQuestion({
         <div className="w-full flex justify-center mb-[40px] lg:mb-[50px] xl:mb-[66px]">
           <ProgressIndicator current={question.currentStep} total={totalSteps} />
         </div>
-        <div className="w-full max-w-[90%] sm:max-w-[85%] lg:max-w-[80%] xl:max-w-[75%] 2xl:max-w-[1200px] mb-[40px] lg:mb-[50px] xl:mb-[70px] 2xl:mb-[96px]">
-          <div className="flex items-start gap-[16px] lg:gap-[24px] xl:gap-[40px] 2xl:gap-[60px] mb-[16px] lg:mb-[20px] xl:mb-[24px] 2xl:mb-[30px]">
-            <BackButton onClick={onBack} />
-          </div>
-          <div className="flex flex-col gap-[6px] lg:gap-[8px] xl:gap-[10px] 2xl:gap-[12px] text-center">
-            <h1 className="font-['Pavanam',sans-serif] text-white text-[24px] sm:text-[28px] lg:text-[32px] xl:text-[40px] 2xl:text-[52px] leading-[1.0]">
-              {question.title}
-            </h1>
-            <p className="font-['Pavanam',sans-serif] text-white text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[22px] 2xl:text-[28px] leading-[1.0]">
-              {question.description}
-            </p>
+        <div className="w-full max-w-[90%] sm:max-w-[85%] lg:max-w-[80%] xl:max-w-[75%] 2xl:max-w-[1240px] mb-[40px] lg:mb-[50px] xl:mb-[70px] 2xl:mb-[96px]">
+          <div className="flex items-start justify-between gap-[16px] lg:gap-[24px]">
+            {/* Left slot for Back Button - fixed width to balance the center */}
+            <div className="flex-1 flex justify-start min-w-[80px] lg:min-w-[120px] xl:min-w-[160px]">
+              <BackButton onClick={onBack} />
+            </div>
+
+            {/* Center slot for Title and Description */}
+            <div className="flex-[3] flex flex-col gap-[6px] lg:gap-[8px] xl:gap-[10px] 2xl:gap-[12px] text-center">
+              <h1 className="font-['Pavanam',sans-serif] text-white text-[24px] sm:text-[28px] lg:text-[32px] xl:text-[40px] 2xl:text-[52px] leading-[1.1]">
+                {question.title}
+              </h1>
+              <p className="font-['Pavanam',sans-serif] text-white text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[22px] 2xl:text-[28px] leading-[1.2] opacity-70 max-w-[800px] mx-auto">
+                {question.description}
+              </p>
+            </div>
+
+            {/* Right slot for symmetry to keep title centered */}
+            <div className="flex-1 hidden sm:flex min-w-[80px] lg:min-w-[120px] xl:min-w-[160px]" aria-hidden="true" />
           </div>
         </div>
         {renderQuestionContent()}
@@ -485,15 +486,13 @@ export function DynamicOnboardingQuestion({
             <button
               onClick={handleContinue}
               disabled={isContinueDisabled()}
-              className={`flex gap-[6px] items-center justify-center px-[20px] lg:px-[24px] xl:px-[28px] 2xl:px-[32px] py-[8px] lg:py-[10px] xl:py-[12px] 2xl:py-[14px] rounded-[35px] transition-all ${
-                !isContinueDisabled()
-                  ? 'bg-[#faf9f6] hover:bg-white cursor-pointer'
-                  : 'bg-[#0f0f0f] border border-[#faf9f6] opacity-50 cursor-not-allowed'
-              }`}
+              className={`flex gap-[6px] items-center justify-center px-[20px] lg:px-[24px] xl:px-[28px] 2xl:px-[32px] py-[8px] lg:py-[10px] xl:py-[12px] 2xl:py-[14px] rounded-[35px] transition-all ${!isContinueDisabled()
+                ? 'bg-[#faf9f6] hover:bg-white cursor-pointer'
+                : 'bg-[#0f0f0f] border border-[#faf9f6] opacity-50 cursor-not-allowed'
+                }`}
             >
-              <p className={`font-['Pavanam',sans-serif] text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[40px] leading-[1.0] ${
-                !isContinueDisabled() ? 'text-black' : 'text-[#faf9f6]'
-              }`}>
+              <p className={`font-['Pavanam',sans-serif] text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[40px] leading-[1.0] ${!isContinueDisabled() ? 'text-black' : 'text-[#faf9f6]'
+                }`}>
                 Continue
               </p>
               <div className="relative shrink-0 size-[14px] lg:size-[16px] xl:size-[18px] 2xl:size-[24px]">
