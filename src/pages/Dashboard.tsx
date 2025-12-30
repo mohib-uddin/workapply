@@ -4,7 +4,10 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import svgPaths from "@/components/ui/icons/dashboard-svg";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import UserService from '@/services/user.service';
+import JobService, { RecommendedJob } from '@/services/job.service';
 import { toast } from 'sonner';
+import { formatDistanceToNow } from 'date-fns';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 
 // Match Circle Component
 function MatchCircle({ percent, pathData }: { percent: string; pathData: string }) {
@@ -29,11 +32,25 @@ function MatchCircle({ percent, pathData }: { percent: string; pathData: string 
 // Detail Frame Component
 function DetailFrame({ text }: { text: string }) {
   return (
-    <div className="relative shrink-0 w-full">
+    <div className="relative shrink-0 w-full overflow-hidden">
       <div aria-hidden="true" className="absolute border-[#faf9f6] border-[0px_0px_0px_2px] border-solid inset-0 pointer-events-none" />
       <div className="flex flex-row items-center size-full">
-        <div className="content-stretch flex items-center px-[12px] py-0 relative w-full">
-          <p className="font-['Pavanam',sans-serif] leading-[22px] not-italic relative shrink-0 text-[#faf9f6] text-[16px] sm:text-[18px]">{text}</p>
+        <div className="content-stretch flex items-center px-[12px] py-0 relative w-full overflow-hidden">
+          <TooltipProvider>
+            <Tooltip delayDuration={300}>
+              <TooltipTrigger asChild>
+                <p className="font-['Pavanam',sans-serif] leading-[22px] not-italic relative text-[#faf9f6] text-[16px] sm:text-[18px] truncate w-full cursor-help">
+                  {text}
+                </p>
+              </TooltipTrigger>
+              <TooltipContent
+                side="top"
+                className="bg-[#0a0a0a]/95 backdrop-blur-xl border border-[#faf9f6]/30 text-[#faf9f6] px-4 py-2 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.8)] z-[100]"
+              >
+                <p className="font-['Pavanam',sans-serif] text-[15px] leading-relaxed">{text}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
     </div>
@@ -82,22 +99,35 @@ function JobCard({
     if (!subscription) {
       navigate('/subscriptions');
     } else {
-      // Original apply logic (not specified in request, but presumably exists or will be added)
       console.log('Applying to job...');
     }
   };
 
   return (
-    <div className={`${bgColor} content-stretch flex flex-col items-start p-[24px] lg:p-[32px] relative rounded-[4px] shrink-0 w-full max-w-[320px] lg:max-w-[342px]`}>
+    <div className={`${bgColor} content-stretch flex flex-col items-start p-[20px] lg:p-[32px] relative rounded-[4px] w-full max-w-[320px] lg:max-w-[342px] min-h-max`}>
       <div aria-hidden="true" className="absolute border border-[#faf9f6] border-solid inset-0 pointer-events-none rounded-[5px]" />
-      <div className="content-stretch flex flex-col gap-[20px] lg:gap-[24px] items-start relative shrink-0 w-full">
+      <div className="content-stretch flex flex-col gap-[16px] lg:gap-[24px] items-start relative w-full">
         <MatchCircle percent={match} pathData={matchPath} />
-        <div className="content-stretch flex flex-col font-['Pavanam',sans-serif] gap-[4px] items-start not-italic relative shrink-0 text-[#faf9f6]">
-          <p className="leading-tight relative shrink-0 text-[22px] lg:text-[28px]">{title}</p>
-          <p className="leading-tight min-w-full relative shrink-0 text-[18px] lg:text-[20px] w-[min-content]">{company}</p>
+        <div className="content-stretch flex flex-col font-['Pavanam',sans-serif] gap-[2px] lg:gap-[4px] items-start not-italic relative shrink-0 text-[#faf9f6] w-full">
+          <TooltipProvider>
+            <Tooltip delayDuration={300}>
+              <TooltipTrigger asChild>
+                <p className="leading-tight relative shrink-0 text-[20px] lg:text-[28px] line-clamp-2 cursor-help w-full">
+                  {title}
+                </p>
+              </TooltipTrigger>
+              <TooltipContent
+                side="top"
+                className="bg-[#0a0a0a]/95 backdrop-blur-xl border border-[#faf9f6]/30 text-[#faf9f6] px-4 py-2 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.8)] max-w-[320px] z-[100]"
+              >
+                <p className="font-['Pavanam',sans-serif] text-[15px] leading-relaxed">{title}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <p className="leading-tight min-w-full relative shrink-0 text-[16px] lg:text-[20px] w-[min-content] truncate opacity-80">{company}</p>
         </div>
-        <div className="content-stretch flex flex-col gap-[10px] lg:gap-[12px] items-start relative shrink-0 w-full">
-          <p className="font-['Pavanam',sans-serif] leading-tight text-[#faf9f6] text-[16px] lg:text-[18px] opacity-70 mb-1">Job Details</p>
+        <div className="content-stretch flex flex-col gap-[8px] lg:gap-[12px] items-start relative shrink-0 w-full">
+          <p className="font-['Pavanam',sans-serif] leading-tight text-[#faf9f6] text-[14px] lg:text-[18px] opacity-70">Job Details</p>
           <DetailFrame text={location} />
           <DetailFrame text={salary} />
           <DetailFrame text={postedTime} />
@@ -132,51 +162,57 @@ function JobCard({
   );
 }
 
+// Utility functions for formatting
+const formatSalary = (pay: RecommendedJob['job']['pay']) => {
+  if (!pay || (!pay.min && !pay.max)) return 'Salary not specified';
+
+  const formatAmount = (amount: number | null) => {
+    if (amount === null) return '';
+    return amount >= 1000 ? `$${Math.round(amount / 1000)}K` : `$${amount}`;
+  };
+
+  if (pay.min && pay.max) {
+    return `${formatAmount(pay.min)}-${formatAmount(pay.max)}`;
+  }
+  return formatAmount(pay.min || pay.max);
+};
+
+const formatPostedTime = (postedAt: string) => {
+  try {
+    return formatDistanceToNow(new Date(postedAt), { addSuffix: true });
+  } catch (error) {
+    return 'Recently';
+  }
+};
+
+const getMatchPath = (score: number) => {
+  return score > 0.8 ? svgPaths.p2462a280 : svgPaths.p218a8200;
+};
+
 export function Dashboard({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'queue' | 'applications' | 'profile') => void }) {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { useFetchRecommendedJobs } = JobService();
+  const { data: recommendedJobsData, isLoading } = useFetchRecommendedJobs(3);
 
   React.useEffect(() => {
     const checkoutStatus = searchParams.get('checkout');
     if (checkoutStatus === 'success') {
       toast.success('Subscription activated! You can now start applying to jobs.');
-      // Clear the param
       navigate('/dashboard', { replace: true });
     }
   }, [searchParams, navigate]);
 
-  const jobs = [
-    {
-      match: '74',
-      matchPath: svgPaths.p218a8200,
-      title: 'Senior Software Engineer',
-      company: 'TechCorp',
-      location: 'San Francisco, CA',
-      salary: '$98K-$100K',
-      postedTime: '2 days ago',
-      variant: 'dark' as const
-    },
-    {
-      match: '94',
-      matchPath: svgPaths.p2462a280,
-      title: 'Web Design Engineer',
-      company: 'CorpTech',
-      location: 'Bellevue, WA',
-      salary: '$98K-$100K',
-      postedTime: '24h ago',
-      variant: 'dark' as const
-    },
-    {
-      match: '74',
-      matchPath: svgPaths.p218a8200,
-      title: 'Software Engineer',
-      company: 'Rise Tech',
-      location: 'Santa Clara, CA',
-      salary: '$98K-$100K',
-      postedTime: '2 days ago',
-      variant: 'dark' as const
-    }
-  ];
+  const jobs = recommendedJobsData?.data.map(item => ({
+    match: Math.round(item.score * 100).toString(),
+    matchPath: getMatchPath(item.score),
+    title: item.job.title,
+    company: item.job.company,
+    location: item.job.location,
+    salary: formatSalary(item.job.pay),
+    postedTime: formatPostedTime(item.job.postedAt),
+    variant: 'dark' as const
+  })) || [];
 
   return (
     <DashboardLayout currentTab="dashboard" onNavigate={onNavigate}>
@@ -193,19 +229,25 @@ export function Dashboard({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'q
 
         {/* Job Cards */}
         <div className="w-full max-w-[1400px] flex flex-col md:flex-row gap-[24px] lg:gap-[40px] xl:gap-[80px] justify-center items-center md:items-stretch pb-6">
-          {jobs.map((job, index) => (
-            <JobCard
-              key={index}
-              match={job.match}
-              matchPath={job.matchPath}
-              title={job.title}
-              company={job.company}
-              location={job.location}
-              salary={job.salary}
-              postedTime={job.postedTime}
-              variant={job.variant}
-            />
-          ))}
+          {isLoading ? (
+            <div className="text-white font-['Pavanam',sans-serif] text-xl">Loading opportunities...</div>
+          ) : jobs.length > 0 ? (
+            jobs.map((job, index) => (
+              <JobCard
+                key={index}
+                match={job.match}
+                matchPath={job.matchPath}
+                title={job.title}
+                company={job.company}
+                location={job.location}
+                salary={job.salary}
+                postedTime={job.postedTime}
+                variant={job.variant}
+              />
+            ))
+          ) : (
+            <div className="text-white font-['Pavanam',sans-serif] text-xl opacity-60">No recommended jobs found yet.</div>
+          )}
         </div>
       </div>
     </DashboardLayout>

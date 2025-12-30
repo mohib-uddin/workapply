@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import svgPaths from "@/components/ui/icons/job-queue-svg";
 import { BackgroundDecor } from "@/components/ui/BackgroundDecor";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-
+import JobService, { RecommendedJob } from '@/services/job.service';
+import { formatDistanceToNow } from 'date-fns';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
+import { ThumbsUp, ThumbsDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 // Toggle Component
 function Toggle({ isOn, onToggle }: { isOn: boolean; onToggle: () => void }) {
@@ -67,86 +71,147 @@ interface JobCardProps {
   job: Job;
   isSelected: boolean;
   onClick: () => void;
+  isLiked: boolean;
+  isDisliked: boolean;
+  onLike: (e: React.MouseEvent) => void;
+  onDislike: (e: React.MouseEvent) => void;
 }
 
-function JobCardSidebar({ job, isSelected, onClick }: JobCardProps) {
+function JobCardSidebar({ job, isSelected, onClick, isLiked, isDisliked, onLike, onDislike }: JobCardProps) {
   return (
     <div
-      className={`${isSelected ? 'bg-[#0f0f0f]' : 'bg-[#1a1a1a]'} content-stretch flex flex-col items-start px-[32px] py-[24px] relative shrink-0 w-full cursor-pointer hover:bg-[#0f0f0f] transition-colors`}
+      className={`${isSelected ? 'bg-[#0f0f0f]' : 'bg-[#1a1a1a]'} flex flex-col items-start px-6 py-5 lg:px-8 lg:py-6 relative shrink-0 w-full cursor-pointer hover:bg-[#0f0f0f] transition-all duration-200 overflow-hidden group border-b border-[#faf9f6]/10`}
       onClick={onClick}
     >
-      {isSelected ? (
-        <div aria-hidden="true" className="absolute border-[#611dcd] border-[0px_0px_0px_18px] border-solid inset-0 pointer-events-none" />
-      ) : (
-        <div aria-hidden="true" className="absolute border-[#9ba1a5] border-[0px_0px_1px] border-solid inset-[0_0_-0.5px_0] pointer-events-none" />
+      {isSelected && (
+        <div aria-hidden="true" className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#611dcd] z-10" />
       )}
 
-      <div className="content-stretch flex flex-col gap-[24px] items-start relative shrink-0 w-full">
-        {/* Title and Match */}
-        <div className="content-stretch flex items-start justify-between leading-[0] relative shrink-0 w-full">
-          <div className="basis-0 content-stretch flex flex-col font-['Pavanam',sans-serif] grow items-start min-h-px min-w-px not-italic relative self-stretch shrink-0 text-[#faf9f6]">
-            <div className="flex flex-col justify-center relative shrink-0 text-[20px] w-full">
-              <p className="leading-[24px]">{job.title}</p>
-            </div>
-            <div className="flex flex-col justify-center relative shrink-0 text-[16px] w-full">
-              <p className="leading-[18px]">{job.company}</p>
-            </div>
+      <div className="flex flex-col gap-3 items-start relative w-full min-w-0">
+        {/* Title and Match Row */}
+        <div className="flex items-start justify-between gap-3 w-full min-w-0">
+          <div className="flex flex-col gap-0.5 grow min-w-0 font-['Pavanam',sans-serif] text-[#faf9f6]">
+            <TooltipProvider>
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <p className="text-[17px] lg:text-[19px] font-semibold leading-tight truncate cursor-help">
+                    {job.title}
+                  </p>
+                </TooltipTrigger>
+                <TooltipContent
+                  side="top"
+                  className="bg-[#0a0a0a]/95 backdrop-blur-xl border border-[#faf9f6]/30 text-[#faf9f6] px-4 py-2 rounded-xl shadow-2xl z-[100] max-w-[280px]"
+                >
+                  <p className="font-['Pavanam',sans-serif] text-[14px]">{job.title}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <TooltipProvider>
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <p className="text-[13px] lg:text-[15px] opacity-70 truncate cursor-help">
+                    {job.company}
+                  </p>
+                </TooltipTrigger>
+                <TooltipContent
+                  side="top"
+                  className="bg-[#0a0a0a]/95 backdrop-blur-xl border border-[#faf9f6]/30 text-[#faf9f6] px-4 py-2 rounded-xl shadow-2xl z-[100] max-w-[280px]"
+                >
+                  <p className="font-['Pavanam',sans-serif] text-[14px]">{job.company}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
 
           {/* Match Circle */}
-          <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0">
-            <div className="[grid-area:1_/_1] flex items-center justify-center ml-0 mt-0 relative size-[55px]">
-              <div className="flex-none rotate-[270deg]">
-                <div className="relative size-[55px]">
-                  <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 54.8094 55.0001">
-                    <path d={job.matchPath} fill={job.match >= 70 ? "#611DCD" : "#9BA1A5"} />
-                  </svg>
-                </div>
-              </div>
-            </div>
-            <div className="[grid-area:1_/_1] flex flex-col font-['Pavanam',sans-serif] h-[16px] justify-center leading-[0] ml-[28px] mt-[28px] not-italic relative text-[#faf9f6] text-[16px] text-center translate-x-[-50%] translate-y-[-50%] w-[34px]">
-              <p className="leading-[18px]">{job.match}%</p>
+          <div className="relative flex-none size-12 lg:size-14">
+            <svg className="size-full rotate-[-90deg]" viewBox="0 0 55 55">
+              <path d={job.matchPath} fill={job.match >= 70 ? "#611DCD" : "#9BA1A5"} />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center font-['Pavanam',sans-serif] text-[14px] lg:text-[16px] text-[#faf9f6]">
+              {job.match}%
             </div>
           </div>
         </div>
 
-        {/* Details */}
-        <div className="content-stretch flex gap-[24px] items-center relative shrink-0 w-full flex-wrap">
-          <div className="content-stretch flex gap-[5px] items-center justify-center relative shrink-0">
-            <div className="relative shrink-0 size-[5px]">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5 5">
-                <circle cx="2.5" cy="2.5" fill="#FAF9F6" r="2.5" />
-              </svg>
-            </div>
-            <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#faf9f6] text-[16px] text-nowrap">
-              <p className="leading-[18px]">{job.location}</p>
-            </div>
+        {/* Combined Metadata & Icons Row */}
+        <div className="flex items-center justify-between w-full min-w-0 gap-3 pt-1">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <DetailBadge text={job.location} className="flex-1" />
+            <DetailBadge text={job.salary} className="shrink-0" />
           </div>
 
-          <div className="content-stretch flex gap-[5px] items-center justify-center relative shrink-0">
-            <div className="relative shrink-0 size-[5px]">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5 5">
-                <circle cx="2.5" cy="2.5" fill="#FAF9F6" r="2.5" />
-              </svg>
-            </div>
-            <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#faf9f6] text-[16px] text-nowrap">
-              <p className="leading-[18px]">{job.postedTime}</p>
-            </div>
-          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <TooltipProvider>
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={onDislike}
+                    className={`flex items-center justify-center size-8 rounded-full transition-all duration-300 ${isDisliked
+                      ? 'bg-[#ef4444]/20 text-[#ef4444] border border-[#ef4444]/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]'
+                      : 'bg-[#1a1a1a] text-[#9ba1a5] hover:bg-[#252525] hover:text-[#faf9f6] border border-[#faf9f6]/5'
+                      }`}
+                  >
+                    <ThumbsDown className={`size-3.5 ${isDisliked ? 'fill-current' : ''}`} />
+                  </motion.button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="bg-[#0a0a0a] border-[#faf9f6]/20">
+                  <p className="text-[12px] font-['Pavanam',sans-serif]">Don't apply for this job</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
 
-          <div className="content-stretch flex gap-[5px] items-center justify-center relative shrink-0">
-            <div className="relative shrink-0 size-[5px]">
-              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5 5">
-                <circle cx="2.5" cy="2.5" fill="#FAF9F6" r="2.5" />
-              </svg>
-            </div>
-            <div className="flex flex-col font-['Pavanam',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#faf9f6] text-[16px] text-nowrap">
-              <p className="leading-[18px]">{job.salary}</p>
-            </div>
+            <TooltipProvider>
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={onLike}
+                    className={`flex items-center justify-center size-8 rounded-full transition-all duration-300 ${isLiked
+                      ? 'bg-[#611dcd]/20 text-[#611dcd] border border-[#611dcd]/30 shadow-[0_0_15px_rgba(97,29,205,0.2)]'
+                      : 'bg-[#1a1a1a] text-[#9ba1a5] hover:bg-[#252525] hover:text-[#611dcd] border border-[#faf9f6]/5'
+                      }`}
+                  >
+                    <ThumbsUp className={`size-3.5 ${isLiked ? 'fill-current' : ''}`} />
+                  </motion.button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="bg-[#0a0a0a] border-[#faf9f6]/20">
+                  <p className="text-[12px] font-['Pavanam',sans-serif]">Save as favorite</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+function DetailBadge({ text, className = "" }: { text: string; className?: string }) {
+  if (!text) return null;
+  return (
+    <TooltipProvider>
+      <Tooltip delayDuration={300}>
+        <TooltipTrigger asChild>
+          <div className={`flex gap-2 items-center min-w-0 max-w-full cursor-help ${className}`}>
+            <div className="size-1 rounded-full bg-[#faf9f6]/60 shrink-0" />
+            <p className="font-['Pavanam',sans-serif] text-[#faf9f6]/80 text-[13px] lg:text-[14px] truncate">
+              {text}
+            </p>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent
+          side="top"
+          className="bg-[#0a0a0a]/95 backdrop-blur-xl border border-[#faf9f6]/30 text-[#faf9f6] px-3 py-1.5 rounded-lg shadow-xl z-[100]"
+        >
+          <p className="font-['Pavanam',sans-serif] text-[13px]">{text}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
 
@@ -170,79 +235,75 @@ function JobDetailsPanel({ job }: { job: Job }) {
           {/* Tags */}
           <div className="flex flex-wrap gap-[12px]">
             <div className="bg-[#1a1a1a] border border-[#faf9f6] rounded-[4px] px-[16px] py-[8px]">
-              <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[16px] leading-[18px]">{job.location}</p>
+              <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[14px] lg:text-[16px] leading-[18px]">{job.location}</p>
             </div>
             <div className="bg-[#1a1a1a] border border-[#faf9f6] rounded-[4px] px-[16px] py-[8px]">
-              <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[16px] leading-[18px]">{job.postedTime}</p>
+              <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[14px] lg:text-[16px] leading-[18px]">{job.postedTime}</p>
             </div>
             <div className="bg-[#1a1a1a] border border-[#faf9f6] rounded-[4px] px-[16px] py-[8px]">
-              <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[16px] leading-[18px]">{job.salary}</p>
+              <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[14px] lg:text-[16px] leading-[18px]">{job.salary}</p>
             </div>
             {job.workType && (
               <div className="bg-[#1a1a1a] border border-[#faf9f6] rounded-[4px] px-[16px] py-[8px]">
-                <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[16px] leading-[18px]">{job.workType}</p>
+                <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[14px] lg:text-[16px] leading-[18px]">{job.workType}</p>
               </div>
             )}
             {job.jobType && (
               <div className="bg-[#1a1a1a] border border-[#faf9f6] rounded-[4px] px-[16px] py-[8px]">
-                <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[16px] leading-[18px]">{job.jobType}</p>
+                <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[14px] lg:text-[16px] leading-[18px]">{job.jobType}</p>
               </div>
             )}
           </div>
         </div>
 
-        {/* About Us */}
-        <div className="mb-[40px]">
-          <h2 className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[28px] lg:text-[32px] leading-[1.1] mb-[16px]">
-            About Us
-          </h2>
-          <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[16px] lg:text-[18px] leading-[1.5]">
-            {job.aboutUs}
-          </p>
-        </div>
-
-        {/* Summary */}
-        <div className="mb-[40px]">
-          <h2 className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[28px] lg:text-[32px] leading-[1.1] mb-[16px]">
-            Summary
-          </h2>
-          <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[16px] lg:text-[18px] leading-[1.5]">
-            {job.summary}
-          </p>
-        </div>
-
-        {/* Responsibilities */}
-        <div className="mb-[40px]">
-          <h2 className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[28px] lg:text-[32px] leading-[1.1] mb-[16px]">
-            Responsibilities
-          </h2>
-          <ul className="space-y-[12px]">
-            {job.responsibilities.map((resp, index) => (
-              <li key={index} className="flex items-start gap-[12px]">
-                <span className="text-[#faf9f6] mt-[6px]">•</span>
-                <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[16px] lg:text-[18px] leading-[1.5] flex-1">
-                  {resp}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Qualifications */}
-        <div className="mb-[40px]">
-          <h2 className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[28px] lg:text-[32px] leading-[1.1] mb-[16px]">
-            Qualifications
-          </h2>
-          <ul className="space-y-[12px]">
-            {job.qualifications.map((qual, index) => (
-              <li key={index} className="flex items-start gap-[12px]">
-                <span className="text-[#faf9f6] mt-[6px]">•</span>
-                <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[16px] lg:text-[18px] leading-[1.5] flex-1">
-                  {qual}
-                </p>
-              </li>
-            ))}
-          </ul>
+        {/* Live HTML Description */}
+        <div className="job-description-content">
+          <style dangerouslySetInnerHTML={{
+            __html: `
+            .job-description-content {
+              color: #faf9f6;
+              font-family: 'Pavanam', sans-serif;
+              line-height: 1.6;
+            }
+            .job-description-content h1, 
+            .job-description-content h2, 
+            .job-description-content h3 {
+              color: #faf9f6;
+              margin-top: 2rem;
+              margin-bottom: 1rem;
+              line-height: 1.2;
+            }
+            .job-description-content h1 { font-size: 2.5rem; }
+            .job-description-content h2 { font-size: 2rem; }
+            .job-description-content h3 { font-size: 1.5rem; }
+            .job-description-content p {
+              margin-bottom: 1.25rem;
+              font-size: 1.125rem;
+              opacity: 0.9;
+            }
+            .job-description-content ul, 
+            .job-description-content ol {
+              margin-bottom: 1.5rem;
+              padding-left: 1.5rem;
+            }
+            .job-description-content li {
+              margin-bottom: 0.5rem;
+              position: relative;
+              font-size: 1.125rem;
+              opacity: 0.9;
+            }
+            .job-description-content ul li::before {
+              content: "•";
+              position: absolute;
+              left: -1rem;
+              color: #611dcd;
+            }
+            .job-description-content strong {
+              color: #fff;
+              font-weight: 600;
+            }
+          `}} />
+          <div dangerouslySetInnerHTML={{ __html: job.description }} />
         </div>
       </div>
     </div>
@@ -261,171 +322,89 @@ interface Job {
   matchPath: string;
   workType?: string;
   jobType?: string;
-  aboutUs: string;
-  summary: string;
-  responsibilities: string[];
-  qualifications: string[];
+  description: string;
 }
+
+const formatSalary = (pay: RecommendedJob['job']['pay']) => {
+  if (!pay || (!pay.min && !pay.max)) return 'Salary not specified';
+  const formatAmount = (amount: number | null) => {
+    if (amount === null) return '';
+    return amount >= 1000 ? `$${Math.round(amount / 1000)}K` : `$${amount}`;
+  };
+  if (pay.min && pay.max) return `${formatAmount(pay.min)}-${formatAmount(pay.max)}`;
+  return formatAmount(pay.min || pay.max);
+};
+
+const getMatchPath = (score: number) => {
+  if (score >= 0.9) return svgPaths.p38a04c80;
+  if (score >= 0.8) return svgPaths.p2996e700;
+  if (score >= 0.7) return svgPaths.p10ec5000;
+  if (score >= 0.6) return svgPaths.p241ef740;
+  return svgPaths.p3d0e500;
+};
 
 export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'queue' | 'applications' | 'profile') => void }) {
   const [autoApplyOn, setAutoApplyOn] = useState(true);
-  const [selectedJobId, setSelectedJobId] = useState(1);
+  const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
+  const [likedJobs, setLikedJobs] = useState<Set<number>>(new Set());
+  const [dislikedJobs, setDislikedJobs] = useState<Set<number>>(new Set());
 
-  const jobs: Job[] = [
-    {
-      id: 1,
-      title: 'Sr. Frontend Developer',
-      company: 'NVIDIA',
-      location: 'Austin, TX',
-      postedTime: '12h ago',
-      salary: '$102K',
-      match: 95,
-      matchPath: svgPaths.p38a04c80,
-      workType: 'Remote',
-      jobType: 'Full-time',
-      aboutUs: 'Just Health is a health technology company offering a wide range of benefits administration solutions for employers and health plans. This includes Capital Rx, a public benefit corporation that provides full-service pharmacy benefit management (PBM) solutions to self-insured employers, Just Health™, which offers comprehensive health benefit management solutions to large PPAs, and health plans, and Judi®, the industry\'s leading proprietary Enterprise Health Platform. To learn more, visit www.just.health.',
-      summary: 'Join our mission to transform pharmacy benefits as a Senior Full-stack Software Developer (Rust). In this role you will assist in leading large projects from design to conclusion, help product managers understand stakeholder requirements, collaborate with developers to establish consistent APIs across our services, and employ best practices for interactions with our API from the frontend.',
-      responsibilities: [
-        'Lead large projects from design to production.',
-        'Work with product managers and designers to refine requirements before implementation.',
-        'Demonstrate technical leadership over product features technically to stakeholders.',
-        'Represent our features technically to stakeholders.',
-        'Interact with operations teams as needed to support project development and production lifecycles.',
-        'Build backend applications in Rust on AWS Lambda, API Gateway, SQS, ECS, etc.',
-        'Develop code in a stateful web application framework (React/TypeScript).',
-        'Collaborate with developers to establish consistent APIs across our services.',
-        'Employ best practices for API interactions with frontend web applications.',
-        'Implement backend code in a serverless, cloud application environment (AWS/AWS Lambda/ECS).',
-        'Make strong architectural choices through careful evaluation and prior experience.',
-        'Work in an Agile/Scrum environment to continually deliver features and updates to our clients.',
-        'Responsible for adhering to the Capital Rx Code of Conduct.'
-      ],
-      qualifications: [
-        '5+ years of related job experience with a broad range of technical skills.',
-        'Desire to work in a flexible technology ecosystem.'
-      ]
-    },
-    {
-      id: 2,
-      title: 'Sr. Principal Engineer',
-      company: 'NVIDIA',
-      location: 'Austin, TX',
-      postedTime: '12h ago',
-      salary: '$102K',
-      match: 74,
-      matchPath: svgPaths.p3d0e500,
-      workType: 'Remote',
-      jobType: 'Full-time',
-      aboutUs: 'NVIDIA is the world leader in visual computing. We are passionate about four markets: Gaming, Automotive, Enterprise Graphics and HPC/Cloud Datacenters; in addition to our traditional OEM business.',
-      summary: 'We are looking for a Senior Principal Engineer to join our graphics driver team. In this role, you will be responsible for designing and implementing new features, optimizing performance, and ensuring the quality of our graphics drivers.',
-      responsibilities: [
-        'Design and implement new graphics driver features',
-        'Optimize driver performance and efficiency',
-        'Debug and resolve complex technical issues',
-        'Collaborate with hardware teams',
-        'Mentor junior engineers'
-      ],
-      qualifications: [
-        '10+ years of experience in graphics driver development',
-        'Strong C/C++ programming skills',
-        'Deep understanding of GPU architecture'
-      ]
-    },
-    {
-      id: 3,
-      title: 'Product Designer',
-      company: 'TechCorp',
-      location: 'Austin, TX',
-      postedTime: '12h ago',
-      salary: '$102K',
-      match: 86,
-      matchPath: svgPaths.p2996e700,
-      aboutUs: 'TechCorp is a leading technology company focused on creating innovative solutions for modern businesses.',
-      summary: 'We are seeking a talented Product Designer to help shape the future of our products. You will work closely with product managers and engineers to create beautiful and functional user experiences.',
-      responsibilities: [
-        'Design user interfaces and experiences',
-        'Create wireframes and prototypes',
-        'Conduct user research',
-        'Collaborate with cross-functional teams'
-      ],
-      qualifications: [
-        '3+ years of product design experience',
-        'Proficiency in Figma and design tools',
-        'Strong portfolio demonstrating design skills'
-      ]
-    },
-    {
-      id: 4,
-      title: 'Data Scientist',
-      company: 'Kinetix',
-      location: 'Austin, TX',
-      postedTime: '12h ago',
-      salary: '$102K',
-      match: 89,
-      matchPath: svgPaths.p10ec5000,
-      aboutUs: 'Kinetix is a data analytics company helping businesses make data-driven decisions.',
-      summary: 'Join our data science team to help analyze and interpret complex data sets. You will build predictive models and provide insights that drive business strategy.',
-      responsibilities: [
-        'Develop machine learning models',
-        'Analyze large datasets',
-        'Present findings to stakeholders',
-        'Collaborate with engineering teams'
-      ],
-      qualifications: [
-        '5+ years of data science experience',
-        'Strong Python and SQL skills',
-        'Experience with ML frameworks'
-      ]
-    },
-    {
-      id: 5,
-      title: 'Product Designer',
-      company: 'Revature',
-      location: 'Austin, TX',
-      postedTime: '12h ago',
-      salary: '$102K',
-      match: 78,
-      matchPath: svgPaths.p241ef740,
-      aboutUs: 'Revature is a technology talent development company that builds custom training programs.',
-      summary: 'We are looking for a creative Product Designer to join our team and help design engaging learning experiences.',
-      responsibilities: [
-        'Design educational interfaces',
-        'Create engaging user experiences',
-        'Work with instructional designers',
-        'Conduct usability testing'
-      ],
-      qualifications: [
-        '3+ years of UX/UI design experience',
-        'Experience in educational technology',
-        'Strong visual design skills'
-      ]
-    },
-    {
-      id: 6,
-      title: 'Sr. Principal Engineer',
-      company: 'NVIDIA',
-      location: 'Austin, TX',
-      postedTime: '12h ago',
-      salary: '$102K',
-      match: 63,
-      matchPath: svgPaths.p14407100,
-      workType: 'Remote',
-      jobType: 'Full-time',
-      aboutUs: 'NVIDIA is the world leader in visual computing.',
-      summary: 'Join our team as a Senior Principal Engineer focusing on AI and machine learning infrastructure.',
-      responsibilities: [
-        'Lead AI infrastructure projects',
-        'Design scalable ML systems',
-        'Mentor engineering teams',
-        'Drive technical innovation'
-      ],
-      qualifications: [
-        '12+ years of software engineering experience',
-        'Expert in distributed systems',
-        'Strong leadership skills'
-      ]
+  const { useFetchRecommendedJobs } = JobService();
+  const { data: recommendedJobsData, isLoading } = useFetchRecommendedJobs(50);
+
+  const handleLike = (e: React.MouseEvent, jobId: number) => {
+    e.stopPropagation();
+    setLikedJobs(prev => {
+      const next = new Set(prev);
+      if (next.has(jobId)) {
+        next.delete(jobId);
+      } else {
+        next.add(jobId);
+        // Remove from dislike if liked
+        const nextDisliked = new Set(dislikedJobs);
+        nextDisliked.delete(jobId);
+        setDislikedJobs(nextDisliked);
+      }
+      return next;
+    });
+  };
+
+  const handleDislike = (e: React.MouseEvent, jobId: number) => {
+    e.stopPropagation();
+    setDislikedJobs(prev => {
+      const next = new Set(prev);
+      if (next.has(jobId)) {
+        next.delete(jobId);
+      } else {
+        next.add(jobId);
+        // Remove from like if disliked
+        const nextLiked = new Set(likedJobs);
+        nextLiked.delete(jobId);
+        setLikedJobs(nextLiked);
+      }
+      return next;
+    });
+  };
+
+  const jobs: Job[] = (recommendedJobsData?.data || []).map(item => ({
+    id: item.id,
+    title: item.job.title,
+    company: item.job.company,
+    location: item.job.location,
+    postedTime: formatDistanceToNow(new Date(item.job.postedAt), { addSuffix: true }),
+    salary: formatSalary(item.job.pay),
+    match: Math.round(item.score * 100),
+    matchPath: getMatchPath(item.score),
+    description: item.job.description,
+    workType: item.job.position,
+    jobType: item.job.platform,
+  }));
+
+  useEffect(() => {
+    if (jobs.length > 0 && selectedJobId === null) {
+      setSelectedJobId(jobs[0].id);
     }
-  ];
+  }, [jobs, selectedJobId]);
 
   const selectedJob = jobs.find(j => j.id === selectedJobId) || jobs[0];
 
@@ -433,7 +412,7 @@ export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'qu
     <DashboardLayout currentTab="queue" onNavigate={onNavigate} showBackground={false} contentScrollable={false}>
       <div className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden relative">
         {/* Left Sidebar - Job List */}
-        <div className="w-full lg:w-[384px] bg-[#0f0f0f] border-r border-[#1a1a1a] flex flex-col shrink-0 h-[50vh] lg:h-full overflow-hidden">
+        <div className="w-full lg:w-[384px] bg-[#0f0f0f] border-r border-[#1a1a1a] flex flex-col shrink-0 h-[40vh] lg:h-full overflow-hidden">
           {/* Auto-Apply Banner */}
           <div className="p-[16px] border-b border-[#1a1a1a] shrink-0">
             <AutoApplyBanner isOn={autoApplyOn} onToggle={() => setAutoApplyOn(!autoApplyOn)} />
@@ -441,14 +420,28 @@ export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'qu
 
           {/* Job Cards - Scrollable */}
           <div className="flex-1 overflow-y-auto">
-            {jobs.map(job => (
-              <JobCardSidebar
-                key={job.id}
-                job={job}
-                isSelected={selectedJobId === job.id}
-                onClick={() => setSelectedJobId(job.id)}
-              />
-            ))}
+            {isLoading ? (
+              <div className="p-8 text-center text-[#faf9f6] opacity-60 font-['Pavanam',sans-serif]">
+                Loading opportunities...
+              </div>
+            ) : jobs.length > 0 ? (
+              jobs.map(job => (
+                <JobCardSidebar
+                  key={job.id}
+                  job={job}
+                  isSelected={selectedJobId === job.id}
+                  onClick={() => setSelectedJobId(job.id)}
+                  isLiked={likedJobs.has(job.id)}
+                  isDisliked={dislikedJobs.has(job.id)}
+                  onLike={(e) => handleLike(e, job.id)}
+                  onDislike={(e) => handleDislike(e, job.id)}
+                />
+              ))
+            ) : (
+              <div className="p-8 text-center text-[#faf9f6] opacity-60 font-['Pavanam',sans-serif]">
+                No recommended jobs found.
+              </div>
+            )}
           </div>
         </div>
 
@@ -456,7 +449,13 @@ export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'qu
         <div className="flex-1 relative h-full overflow-hidden">
           <BackgroundDecor />
           <div className="h-full overflow-y-auto relative z-10">
-            <JobDetailsPanel job={selectedJob} />
+            {selectedJob ? (
+              <JobDetailsPanel job={selectedJob} />
+            ) : !isLoading && (
+              <div className="h-full flex items-center justify-center text-[#faf9f6] opacity-60 font-['Pavanam',sans-serif]">
+                Select a job to view details
+              </div>
+            )}
           </div>
         </div>
       </div>

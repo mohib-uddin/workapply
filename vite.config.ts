@@ -17,4 +17,7 @@ export default defineConfig({
       'figma:asset': path.resolve(__dirname, './src/assets'),
     },
   },
+  server:{
+    port:3001
+  }
 })

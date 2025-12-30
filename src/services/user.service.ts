@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import instance from '@/lib/config/axios-instance';
 import { OnboardingData } from '@/store/onboarding.store';
 
@@ -59,7 +59,7 @@ const UserService = () => {
             label: link.label,
             url: link.url
           }));
-        
+
         const cleanData = {
           usResidency: data.usResidency,
           workAuthorization: data.workAuthorization,
@@ -84,11 +84,11 @@ const UserService = () => {
           clearanceLevel: data.clearanceLevel,
           profileLinks: profileLinksToSend,
         };
-        
+
         console.log('Submitting onboarding data to backend:', cleanData);
-        
+
         const response = await instance.post('/api/v1/user-onboarding', cleanData);
-        
+
         return {
           success: true,
           message: 'Onboarding data submitted successfully',
@@ -96,7 +96,7 @@ const UserService = () => {
         };
       } catch (error: any) {
         console.error('Error submitting onboarding data:', error);
-        
+
         return {
           success: false,
           message: error.response?.data?.message || 'Failed to submit onboarding data',
@@ -105,15 +105,23 @@ const UserService = () => {
       }
     };
 
+    const queryClient = useQueryClient();
+
     return useMutation({
       mutationFn: submitOnboarding,
       retry: 1,
+      onSuccess: (data) => {
+        if (data.success) {
+          queryClient.invalidateQueries({ queryKey: ['userOnboarding'] });
+          queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+        }
+      },
     });
   };
 
   const validateOnboardingData = (data: Partial<OnboardingData>): { isValid: boolean; errors: string[] } => {
     const errors: string[] = [];
-    
+
     // Check required fields
     if (data.usResidency === null || data.usResidency === undefined) errors.push('US residency status is required');
     if (!data.workAuthorization || data.workAuthorization === '') errors.push('Work authorization is required');
@@ -141,7 +149,7 @@ const UserService = () => {
         errors.push('Clearance level is required when security clearance is yes');
       }
     }
-    
+
     return {
       isValid: errors.length === 0,
       errors

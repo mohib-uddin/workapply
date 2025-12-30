@@ -13,7 +13,7 @@ type OnboardingStep = 'upload' | 'intro' | 'question' | 'completion';
 
 export function OnboardingFlow() {
   const navigate = useNavigate();
-  const { data, updateMultipleData, markCompleted } = useOnboardingStore();
+  const { data, updateMultipleData, markCompleted, clearStorage } = useOnboardingStore();
   const { useSubmitOnboardingData, validateOnboardingData } = UserService();
   const submitOnboardingMutation = useSubmitOnboardingData();
   const { data: resumeData, isSuccess: resumeSuccess } = useFetchResume(true);
@@ -22,8 +22,13 @@ export function OnboardingFlow() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isResumeUploaded, setIsResumeUploaded] = useState(false);
 
+  const [isCompleting, setIsCompleting] = useState(false);
+
   // Check if resume already exists on mount
   useEffect(() => {
+    // If we are completing, don't change the step based on data changes
+    if (isCompleting) return;
+
     if (resumeSuccess && resumeData?.data && Array.isArray(resumeData.data) && resumeData.data.length > 0) {
       setIsResumeUploaded(true);
       // Check if we have any questions answered
@@ -40,7 +45,7 @@ export function OnboardingFlow() {
         setCurrentStep('intro');
       }
     }
-  }, [resumeSuccess, resumeData, data]);
+  }, [resumeSuccess, resumeData, data, isCompleting]);
 
   // Filter questions based on conditional logic
   const filteredQuestions = ONBOARDING_QUESTIONS.filter(question => {
@@ -114,7 +119,8 @@ export function OnboardingFlow() {
       const response = await submitOnboardingMutation.mutateAsync(data);
 
       if (response.success) {
-        markCompleted();
+        setIsCompleting(true);
+        clearStorage();
         toast.success('Profile completed successfully!');
         setTimeout(() => {
           navigate('/dashboard');
