@@ -110,10 +110,13 @@ const UserService = () => {
     return useMutation({
       mutationFn: submitOnboarding,
       retry: 1,
-      onSuccess: (data) => {
+      onSuccess: async (data) => {
         if (data.success) {
-          queryClient.invalidateQueries({ queryKey: ['userOnboarding'] });
-          queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+          // Invalidate and refetch to ensure fresh data before navigation
+          await queryClient.invalidateQueries({ queryKey: ['userOnboarding'] });
+          await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+          // Give a brief moment for the refetch to complete
+          await new Promise(resolve => setTimeout(resolve, 100));
         }
       },
     });
@@ -167,6 +170,8 @@ const UserService = () => {
       queryKey: ['userOnboarding'],
       enabled,
       retry: 1,
+      refetchOnMount: 'always', // Always refetch on mount to ensure fresh data
+      staleTime: 0, // Consider data immediately stale
     });
   };
 

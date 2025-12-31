@@ -116,19 +116,21 @@ export function OnboardingFlow() {
     }
 
     try {
+      setIsCompleting(true);
       const response = await submitOnboardingMutation.mutateAsync(data);
 
       if (response.success) {
-        setIsCompleting(true);
         clearStorage();
         toast.success('Profile completed successfully!');
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 1000);
+        // Navigate immediately to dashboard - the mutation will invalidate queries
+        // and the OnboardingGuard will fetch fresh data
+        navigate('/dashboard', { replace: true });
       } else {
+        setIsCompleting(false);
         toast.error(response.message || 'Failed to submit profile data');
       }
     } catch (error) {
+      setIsCompleting(false);
       console.error('Error submitting onboarding data:', error);
       toast.error('An error occurred while submitting your profile data');
     }
