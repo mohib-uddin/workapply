@@ -5,8 +5,9 @@ import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import JobService, { RecommendedJob } from '@/services/job.service';
 import { formatDistanceToNow } from 'date-fns';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
-import { ThumbsUp, ThumbsDown } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { JobQueueWelcomeTour } from '@/components/modules/job-queue/JobQueueWelcomeTour';
 
 // Toggle Component
 function Toggle({ isOn, onToggle }: { isOn: boolean; onToggle: () => void }) {
@@ -40,7 +41,7 @@ function Toggle({ isOn, onToggle }: { isOn: boolean; onToggle: () => void }) {
 }
 
 // Auto-Apply Banner
-function AutoApplyBanner({ isOn, onToggle }: { isOn: boolean; onToggle: () => void }) {
+function AutoApplyBanner({ isOn, onToggle, onHelpClick }: { isOn: boolean; onToggle: () => void; onHelpClick?: () => void }) {
   return (
     <div className="bg-black relative rounded-[4px] shrink-0 w-full">
       <div className="flex flex-row items-center size-full">
@@ -60,6 +61,23 @@ function AutoApplyBanner({ isOn, onToggle }: { isOn: boolean; onToggle: () => vo
               </p>
             </div>
           </div>
+          {onHelpClick && (
+            <TooltipProvider>
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={onHelpClick}
+                    className="flex-none size-8 rounded-[4px] bg-[#1a1a1a] hover:bg-[#252525] flex items-center justify-center transition-all duration-200 group"
+                  >
+                    <HelpCircle className="size-4 text-[#9ba1a5] group-hover:text-[#faf9f6] transition-colors duration-200" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="bg-[#0f0f0f] border-[#1a1a1a]">
+                  <p className="text-[12px] font-['Pavanam',sans-serif]">View Job Queue tour</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         </div>
       </div>
     </div>
@@ -348,9 +366,27 @@ export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'qu
   const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
   const [likedJobs, setLikedJobs] = useState<Set<number>>(new Set());
   const [dislikedJobs, setDislikedJobs] = useState<Set<number>>(new Set());
+  const [showWelcomeTour, setShowWelcomeTour] = useState(false);
 
   const { useFetchRecommendedJobs } = JobService();
   const { data: recommendedJobsData, isLoading } = useFetchRecommendedJobs(50);
+
+  // Check if this is the first visit to Job Queue
+  useEffect(() => {
+    const hasSeenTour = localStorage.getItem('jobQueueTourCompleted');
+    if (!hasSeenTour) {
+      // Small delay to let the page render first
+      const timer = setTimeout(() => {
+        setShowWelcomeTour(true);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleCloseTour = () => {
+    setShowWelcomeTour(false);
+    localStorage.setItem('jobQueueTourCompleted', 'true');
+  };
 
   const handleLike = (e: React.MouseEvent, jobId: number) => {
     e.stopPropagation();
@@ -409,13 +445,20 @@ export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'qu
   const selectedJob = jobs.find(j => j.id === selectedJobId) || jobs[0];
 
   return (
-    <DashboardLayout currentTab="queue" onNavigate={onNavigate} showBackground={false} contentScrollable={false}>
+    <>
+      <JobQueueWelcomeTour open={showWelcomeTour} onClose={handleCloseTour} />
+      
+      <DashboardLayout currentTab="queue" onNavigate={onNavigate} showBackground={false} contentScrollable={false}>
       <div className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden relative">
         {/* Left Sidebar - Job List */}
         <div className="w-full lg:w-[384px] bg-[#0f0f0f] border-r border-[#1a1a1a] flex flex-col shrink-0 h-[40vh] lg:h-full overflow-hidden">
           {/* Auto-Apply Banner */}
           <div className="p-[16px] border-b border-[#1a1a1a] shrink-0">
-            <AutoApplyBanner isOn={autoApplyOn} onToggle={() => setAutoApplyOn(!autoApplyOn)} />
+            <AutoApplyBanner 
+              isOn={autoApplyOn} 
+              onToggle={() => setAutoApplyOn(!autoApplyOn)}
+              onHelpClick={() => setShowWelcomeTour(true)}
+            />
           </div>
 
           {/* Job Cards - Scrollable */}
@@ -460,5 +503,6 @@ export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'qu
         </div>
       </div>
     </DashboardLayout>
+    </>
   );
 }

@@ -38,11 +38,6 @@ export function TopNavBar({ currentTab, onTabChange, onProfileClick }: TopNavBar
             <div className="content-stretch flex gap-[40px] lg:gap-[100px] h-full items-center justify-end relative shrink-0">
                 {/* Menu Options */}
                 <div className="hidden md:flex content-stretch gap-[24px] lg:gap-[40px] h-full items-center relative shrink-0">
-                    <NavItem
-                        active={currentTab === 'dashboard'}
-                        label="Dashboard"
-                        onClick={() => onTabChange('dashboard')}
-                    />
                     {isLoading ? (
                         <Spinner className="size-4 text-white/50" />
                     ) : isSubscribed ? (
@@ -58,7 +53,13 @@ export function TopNavBar({ currentTab, onTabChange, onProfileClick }: TopNavBar
                                 onClick={() => onTabChange('applications')}
                             />
                         </>
-                    ) : null}
+                    ) : (
+                        <NavItem
+                            active={currentTab === 'dashboard'}
+                            label="Dashboard"
+                            onClick={() => onTabChange('dashboard')}
+                        />
+                    )}
                 </div>
 
                 {/* Notif + Profile */}

@@ -13,7 +13,7 @@ function PlanCard({ plan }: { plan: PricingPlan }) {
 
     const handleSelectPlan = async () => {
         try {
-            const successUrl = `${window.location.origin}/dashboard?checkout=success`;
+            const successUrl = `${window.location.origin}/job-queue?checkout=success`;
             const failureUrl = `${window.location.origin}/subscriptions?checkout=cancel`;
 
             const response = await checkoutMutation.mutateAsync({
