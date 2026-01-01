@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavTab, TopNavBar } from './TopNavBar';
+import { BottomNavBar } from './BottomNavBar';
 import { BackgroundDecor } from "@/components/ui/BackgroundDecor";
 
 interface DashboardLayoutProps {
@@ -39,9 +40,14 @@ export function DashboardLayout({
                 onProfileClick={handleProfileClick}
             />
 
-            <div className={`flex-1 flex flex-col relative z-10 ${contentScrollable ? 'overflow-y-auto' : 'overflow-hidden'}`}>
+            <div className={`flex-1 flex flex-col relative z-10 ${contentScrollable ? 'overflow-y-auto' : 'overflow-hidden'} pb-[64px] md:pb-0`}>
                 {children}
             </div>
+
+            <BottomNavBar
+                currentTab={currentTab}
+                onTabChange={handleTabChange}
+            />
         </div>
     );
 }

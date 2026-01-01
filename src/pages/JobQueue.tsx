@@ -9,6 +9,7 @@ import { ThumbsUp, ThumbsDown, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import JobQueueWelcomeTour from '@/components/modules/job-queue/JobQueueWelcomeTour';
 import { Skeleton } from "@/components/ui/skeleton";
+import { Drawer, DrawerContent } from "@/components/ui/drawer";
 // Toggle Component
 function Toggle({ isOn, onToggle }: { isOn: boolean; onToggle: () => void }) {
   return (
@@ -409,6 +410,7 @@ export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'qu
   const [likedJobs, setLikedJobs] = useState<Set<number>>(new Set());
   const [dislikedJobs, setDislikedJobs] = useState<Set<number>>(new Set());
   const [showWelcomeTour, setShowWelcomeTour] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const { useFetchRecommendedJobs, useFetchJobById } = JobService();
   const { data: recommendedJobsData, isLoading } = useFetchRecommendedJobs(50);
@@ -503,6 +505,24 @@ export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'qu
     jobType: jobDetails?.parsedEmploymentType || selectedJobFromList.jobType,
   } : null;
 
+  // Handle Window Resize for Drawer Logic
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsDrawerOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleJobClick = (jobId: number) => {
+    setSelectedJobId(jobId);
+    if (window.innerWidth < 1024) {
+      setIsDrawerOpen(true);
+    }
+  };
+
   return (
     <>
       <JobQueueWelcomeTour open={showWelcomeTour} onClose={handleCloseTour} />
@@ -510,7 +530,7 @@ export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'qu
       <DashboardLayout currentTab="queue" onNavigate={onNavigate} showBackground={false} contentScrollable={false}>
         <div className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden relative">
           {/* Left Sidebar - Job List */}
-          <div className="w-full lg:w-[384px] bg-[#0f0f0f] border-r border-[#1a1a1a] flex flex-col shrink-0 h-[40vh] lg:h-full overflow-hidden">
+          <div className="w-full lg:w-[384px] bg-[#0f0f0f] border-r border-[#1a1a1a] flex flex-col shrink-0 h-full overflow-hidden">
             {/* Auto-Apply Banner */}
             <div className="p-[16px] border-b border-[#1a1a1a] shrink-0">
               <AutoApplyBanner
@@ -532,7 +552,7 @@ export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'qu
                     key={job.id}
                     job={job}
                     isSelected={selectedJobId === job.id}
-                    onClick={() => setSelectedJobId(job.id)}
+                    onClick={() => handleJobClick(job.id)}
                     isLiked={likedJobs.has(job.id)}
                     isDisliked={dislikedJobs.has(job.id)}
                     onLike={(e) => handleLike(e, job.id)}
@@ -547,8 +567,8 @@ export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'qu
             </div>
           </div>
 
-          {/* Right Panel - Job Details - Scrollable */}
-          <div className="flex-1 relative h-full overflow-hidden">
+          {/* Right Panel - Job Details - Desktop Only */}
+          <div className="hidden lg:block flex-1 relative h-full overflow-hidden">
             <BackgroundDecor />
             <div className="h-full overflow-y-auto relative z-10">
               {isLoadingDetails ? (
@@ -563,6 +583,16 @@ export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'qu
             </div>
           </div>
         </div>
+
+        {/* Mobile Drawer for Job Details */}
+        <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+          <DrawerContent className="bg-[#1a1a1a] border-t border-[#faf9f6]/20 max-h-[90vh]">
+            <div className="overflow-y-auto p-0">
+              <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-[#faf9f6]/20 mt-4 mb-0" />
+              {selectedJob && <JobDetailsPanel job={selectedJob} />}
+            </div>
+          </DrawerContent>
+        </Drawer>
       </DashboardLayout>
     </>
   );

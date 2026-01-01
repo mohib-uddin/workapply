@@ -162,22 +162,7 @@ function StatusPill({ status }: { status: string }) {
     // Improved colors for premium dark theme feel
     // Using subtle backgrounds with brighter text/borders or glass effect
     const getStatusStyles = (s: string) => {
-        switch (s) {
-            case 'in_queue':
-                return 'bg-[#9BA1A5]/10 text-[#9BA1A5] border-[#9BA1A5]/20'; // Neutral / Waiting
-            case 'applied':
-                return 'bg-[#611dcd]/10 text-[#a78bfa] border-[#611dcd]/30'; // Brand Purple
-            case 'completed':
-                return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'; // Success
-            case 'viewed':
-                return 'bg-blue-500/10 text-blue-400 border-blue-500/20'; // Info
-            case 'rejected':
-                return 'bg-red-500/10 text-red-400 border-red-500/20'; // Warning/Error
-            case 'interview':
-                return 'bg-amber-500/10 text-amber-400 border-amber-500/20'; // Highlight
-            default:
-                return 'bg-[#2a2a2a] text-[#9ba1a5] border-[#404040]';
-        }
+        return 'bg-[#9BA1A5]/10 text-[#9BA1A5] border-[#9BA1A5]/20';
     };
 
     const formatStatus = (s: string) => {
@@ -191,6 +176,8 @@ function StatusPill({ status }: { status: string }) {
     );
 }
 
+
+
 export function Applications({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'queue' | 'applications' | 'profile') => void }) {
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -200,12 +187,12 @@ export function Applications({ onNavigate }: { onNavigate?: (page: 'dashboard' |
     );
 
     return (
-        <DashboardLayout currentTab="applications" onNavigate={onNavigate} showBackground={false} contentScrollable={true}>
+        <DashboardLayout currentTab="applications" onNavigate={onNavigate} showBackground={false} contentScrollable={false}>
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <BackgroundDecor />
             </div>
 
-            <div className="flex-1 flex flex-col p-6 lg:p-10 max-w-[1600px] mx-auto w-full relative z-10 h-full">
+            <div className="flex-1 flex flex-col p-4 md:p-6 lg:p-10 max-w-[1600px] mx-auto w-full relative z-10 min-h-0 overflow-y-auto md:overflow-hidden">
 
                 {/* Header Section */}
                 <div className="flex flex-col gap-1 mb-8">
@@ -243,11 +230,10 @@ export function Applications({ onNavigate }: { onNavigate?: (page: 'dashboard' |
                 </div>
 
                 {/* Applications List */}
-                <div className="bg-[#1a1a1a] border border-[#faf9f6]/10 rounded-xl overflow-hidden shadow-2xl flex-1 flex flex-col min-h-0">
+                <div className="md:bg-[#1a1a1a] md:border md:border-[#faf9f6]/10 md:rounded-xl md:overflow-hidden md:shadow-2xl flex-1 flex flex-col md:min-h-0 w-full">
 
-                    {/* Table Header */}
-                    {/* Adjusted Grid Columns: Title(2), Company(1.5), Salary(1), Match(1), Status(1), Date(0.8), Location(1.2) */}
-                    <div className="grid grid-cols-[1.8fr_1.2fr_1fr_0.8fr_1.2fr_1fr_1.2fr] gap-4 p-5 border-b border-[#faf9f6]/10 bg-[#0f0f0f]/50 text-[#9ba1a5] text-[13px] font-['Pavanam',sans-serif] uppercase tracking-wider font-semibold sticky top-0 z-10 backdrop-blur-sm">
+                    {/* Table Header - Desktop Only */}
+                    <div className="hidden md:grid grid-cols-[1.8fr_1.2fr_1fr_0.8fr_1.2fr_1fr_1.2fr] gap-4 p-5 border-b border-[#faf9f6]/10 bg-[#0f0f0f]/50 text-[#9ba1a5] text-[13px] font-['Pavanam',sans-serif] uppercase tracking-wider font-semibold sticky top-0 z-10 backdrop-blur-sm">
                         <div className="pl-2">Job Title</div>
                         <div>Company</div>
                         <div>Salary</div>
@@ -257,54 +243,95 @@ export function Applications({ onNavigate }: { onNavigate?: (page: 'dashboard' |
                         <div className="text-right pr-2">Location</div>
                     </div>
 
-                    {/* Table Body */}
-                    <div className="overflow-y-auto flex-1">
+                    {/* Content Body */}
+                    <div className="md:overflow-y-auto flex-1 p-0">
                         {filteredApps.map((app, index) => (
-                            <motion.div
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.05 }}
-                                key={app.id}
-                                className="grid grid-cols-[1.8fr_1.2fr_1fr_0.8fr_1.2fr_1fr_1.2fr] gap-4 p-5 border-b border-[#faf9f6]/5 text-[#faf9f6] text-[15px] font-['Pavanam',sans-serif] items-center hover:bg-[#faf9f6]/[0.02] transition-colors group cursor-default"
-                            >
-                                {/* Job Title */}
-                                <div className="font-medium text-[16px] pl-2 group-hover:text-white transition-colors truncate pr-4" title={app.jobTitle}>
-                                    {app.jobTitle}
-                                </div>
+                            <React.Fragment key={app.id}>
+                                {/* Mobile Card View */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.05 }}
+                                    className="md:hidden bg-[#1a1a1a] border border-[#faf9f6]/10 rounded-lg p-4 mb-3 flex flex-col gap-3 shadow-sm"
+                                >
+                                    <div className="flex justify-between items-start gap-3">
+                                        <div className="flex flex-col gap-1 min-w-0">
+                                            <div className="font-medium text-[16px] text-[#faf9f6] break-words leading-tight">
+                                                {app.jobTitle}
+                                            </div>
+                                            <div className="flex items-center gap-2 text-[#9ba1a5] text-sm">
+                                                <Briefcase className="size-3.5 opacity-50 text-[#611dcd]" />
+                                                <span className="truncate">{app.company}</span>
+                                            </div>
+                                        </div>
+                                        <TableMatchCircle score={app.matchScore} />
+                                    </div>
 
-                                {/* Company */}
-                                <div className="flex items-center gap-2 text-[#9ba1a5] group-hover:text-[#faf9f6] transition-colors">
-                                    <Briefcase className="size-3.5 opacity-50 text-[#611dcd]" />
-                                    <span className="truncate" title={app.company}>{app.company}</span>
-                                </div>
+                                    <div className="grid grid-cols-2 gap-3 py-2 border-y border-[#faf9f6]/5">
+                                        <div className="flex flex-col gap-0.5">
+                                            <span className="text-[10px] uppercase tracking-wider text-[#9ba1a5]/60 font-semibold">Salary</span>
+                                            <span className="text-sm text-[#faf9f6]">{app.salary}</span>
+                                        </div>
+                                        <div className="flex flex-col gap-0.5">
+                                            <span className="text-[10px] uppercase tracking-wider text-[#9ba1a5]/60 font-semibold">Applied</span>
+                                            <span className="text-sm text-[#faf9f6]">{app.appliedDate}</span>
+                                        </div>
+                                    </div>
 
-                                {/* Salary - New Column */}
-                                <div className="text-[#9ba1a5] group-hover:text-[#faf9f6] transition-colors flex items-center gap-1.5">
-                                    <span className="truncate" title={app.salary}>{app.salary}</span>
-                                </div>
+                                    <div className="flex items-center justify-between pt-1">
+                                        <StatusPill status={app.status} />
+                                        <div className="flex items-center gap-1.5 text-[#9ba1a5] text-xs">
+                                            <MapPin className="size-3 text-[#611dcd]" />
+                                            <span className="truncate max-w-[120px]">{app.location}</span>
+                                        </div>
+                                    </div>
+                                </motion.div>
 
-                                {/* Match Score */}
-                                <div>
-                                    <TableMatchCircle score={app.matchScore} />
-                                </div>
+                                {/* Desktop Table Row View */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.05 }}
+                                    className="hidden md:grid grid-cols-[1.8fr_1.2fr_1fr_0.8fr_1.2fr_1fr_1.2fr] gap-4 p-5 border-b border-[#faf9f6]/5 text-[#faf9f6] text-[15px] font-['Pavanam',sans-serif] items-center hover:bg-[#faf9f6]/[0.02] transition-colors group cursor-default"
+                                >
+                                    {/* Job Title */}
+                                    <div className="font-medium text-[16px] pl-2 group-hover:text-white transition-colors truncate pr-4" title={app.jobTitle}>
+                                        {app.jobTitle}
+                                    </div>
 
-                                {/* Status - Improved Badge */}
-                                <div>
-                                    <StatusPill status={app.status} />
-                                </div>
+                                    {/* Company */}
+                                    <div className="flex items-center gap-2 text-[#9ba1a5] group-hover:text-[#faf9f6] transition-colors">
+                                        <Briefcase className="size-3.5 opacity-50 text-[#611dcd]" />
+                                        <span className="truncate" title={app.company}>{app.company}</span>
+                                    </div>
 
-                                {/* Applied Date - New Column */}
-                                <div className="text-[#9ba1a5] text-[14px]">
-                                    {app.appliedDate}
-                                </div>
+                                    {/* Salary */}
+                                    <div className="text-[#9ba1a5] group-hover:text-[#faf9f6] transition-colors flex items-center gap-1.5">
+                                        <span className="truncate" title={app.salary}>{app.salary}</span>
+                                    </div>
 
-                                {/* Location */}
-                                <div className="flex items-center justify-end gap-2 text-[#9ba1a5] truncate text-right pr-2">
-                                    <span className="truncate" title={app.location}>{app.location}</span>
-                                    <MapPin className="size-3.5 opacity-50 shrink-0 text-[#611dcd]" />
-                                </div>
+                                    {/* Match Score */}
+                                    <div>
+                                        <TableMatchCircle score={app.matchScore} />
+                                    </div>
 
-                            </motion.div>
+                                    {/* Status */}
+                                    <div>
+                                        <StatusPill status={app.status} />
+                                    </div>
+
+                                    {/* Applied Date */}
+                                    <div className="text-[#9ba1a5] text-[14px]">
+                                        {app.appliedDate}
+                                    </div>
+
+                                    {/* Location */}
+                                    <div className="flex items-center justify-end gap-2 text-[#9ba1a5] truncate text-right pr-2">
+                                        <span className="truncate" title={app.location}>{app.location}</span>
+                                        <MapPin className="size-3.5 opacity-50 shrink-0 text-[#611dcd]" />
+                                    </div>
+                                </motion.div>
+                            </React.Fragment>
                         ))}
 
                         {filteredApps.length === 0 && (

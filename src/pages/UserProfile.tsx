@@ -42,7 +42,7 @@ function LeftSidebar() {
   };
 
   return (
-    <div className="w-full lg:w-[311px] bg-[#0f0f0f] flex flex-col relative overflow-y-auto shrink-0 border-r border-[#1a1a1a]">
+    <div className="w-full lg:w-[311px] bg-[#0f0f0f] flex flex-col relative shrink-0 border-b lg:border-r border-[#1a1a1a] h-auto lg:h-full lg:overflow-y-auto">
       <BackgroundDecor />
 
       <div className="relative z-10 p-[20px] lg:p-[24px] flex flex-col gap-[24px]">
@@ -262,7 +262,7 @@ function RightContent() {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto relative bg-[#0f0f0f]">
+    <div className="flex-1 relative bg-[#0f0f0f] h-auto lg:h-full lg:overflow-y-auto">
       <div className="px-[20px] sm:px-[40px] lg:px-[60px] xl:px-[80px] py-[32px] lg:py-[50px]">
         {/* Tabs */}
         <div className="flex items-center justify-center mb-[32px] lg:mb-[48px]">
@@ -657,7 +657,7 @@ function SubscriptionDetails() {
 export function UserProfile({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'queue' | 'applications' | 'profile') => void }) {
   return (
     <DashboardLayout currentTab="profile" onNavigate={onNavigate} showBackground={false} contentScrollable={false}>
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+      <div className="flex-1 flex flex-col lg:flex-row lg:overflow-hidden overflow-y-auto relative">
         {/* Left Sidebar */}
         <LeftSidebar />
 

@@ -35,9 +35,9 @@ export function TopNavBar({ currentTab, onTabChange, onProfileClick }: TopNavBar
             </div>
 
             {/* Menu + Icons */}
-            <div className="content-stretch flex gap-[40px] lg:gap-[100px] h-full items-center justify-end relative shrink-0">
+            <div className="hidden md:flex content-stretch gap-[40px] lg:gap-[100px] h-full items-center justify-end relative shrink-0">
                 {/* Menu Options */}
-                <div className="hidden md:flex content-stretch gap-[24px] lg:gap-[40px] h-full items-center relative shrink-0">
+                <div className="flex content-stretch gap-[24px] lg:gap-[40px] h-full items-center relative shrink-0">
                     {isLoading ? (
                         <Spinner className="size-4 text-white/50" />
                     ) : isSubscribed ? (
