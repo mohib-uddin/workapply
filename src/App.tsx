@@ -5,6 +5,7 @@ import { OnboardingFlow } from './pages/OnboardingFlow';
 import { Dashboard } from './pages/Dashboard';
 import { JobQueue } from './pages/JobQueue';
 import { UserProfile } from './pages/UserProfile';
+import { Applications } from './pages/Applications';
 import { SubscriptionPlans } from './pages/SubscriptionPlans';
 import { ProtectedRoute, PublicRoute } from './components/shared/AuthGuard';
 import { OnboardingGuard } from './components/shared/OnboardingGuard';
@@ -25,6 +26,7 @@ export default function App() {
         <Route element={<OnboardingGuard />}>
           <Route path="/dashboard" element={<Dashboard onNavigate={(page) => navigate(`/${page}`)} />} />
           <Route path="/queue" element={<JobQueue onNavigate={(page) => navigate(`/${page}`)} />} />
+          <Route path="/applications" element={<Applications onNavigate={(page) => navigate(`/${page}`)} />} />
           <Route path="/profile" element={<UserProfile onNavigate={(page) => navigate(`/${page}`)} />} />
           <Route path="/subscriptions" element={<SubscriptionPlans onNavigate={(page) => navigate(`/${page}`)} />} />
         </Route>
