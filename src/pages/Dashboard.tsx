@@ -5,6 +5,7 @@ import svgPaths from "@/components/ui/icons/dashboard-svg";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import UserService from '@/services/user.service';
 import JobService, { RecommendedJob } from '@/services/job.service';
+import { GetStartedBanner } from '@/components/modules/dashboard/GetStartedBanner';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -39,7 +40,7 @@ function DetailFrame({ text }: { text: string }) {
           <TooltipProvider>
             <Tooltip delayDuration={300}>
               <TooltipTrigger asChild>
-                <p className="font-['Pavanam',sans-serif] leading-[22px] not-italic relative text-[#faf9f6] text-[16px] sm:text-[18px] truncate w-full cursor-help">
+                <p className="font-['Pavanam',sans-serif] leading-[22px] not-italic relative text-[#faf9f6] text-[16px] sm:text-[18px] truncate w-full">
                   {text}
                 </p>
               </TooltipTrigger>
@@ -112,7 +113,7 @@ function JobCard({
           <TooltipProvider>
             <Tooltip delayDuration={300}>
               <TooltipTrigger asChild>
-                <p className="leading-tight relative shrink-0 text-[20px] lg:text-[28px] line-clamp-2 cursor-help w-full">
+                <p className="leading-tight relative shrink-0 text-[20px] lg:text-[28px] line-clamp-2 w-full">
                   {title}
                 </p>
               </TooltipTrigger>
@@ -163,18 +164,18 @@ function JobCard({
 }
 
 // Utility functions for formatting
-const formatSalary = (pay: RecommendedJob['job']['pay']) => {
-  if (!pay || (!pay.min && !pay.max)) return 'Salary not specified';
+const formatSalary = (min: number | null, max: number | null) => {
+  if ((min === null || min === 0) && (max === null || max === 0)) return 'Salary not specified';
 
   const formatAmount = (amount: number | null) => {
-    if (amount === null) return '';
+    if (amount === null || amount === 0) return '';
     return amount >= 1000 ? `$${Math.round(amount / 1000)}K` : `$${amount}`;
   };
 
-  if (pay.min && pay.max) {
-    return `${formatAmount(pay.min)}-${formatAmount(pay.max)}`;
+  if (min && max) {
+    return `${formatAmount(min)}-${formatAmount(max)}`;
   }
-  return formatAmount(pay.min || pay.max);
+  return formatAmount(min || max);
 };
 
 const formatPostedTime = (postedAt: string) => {
@@ -209,7 +210,7 @@ export function Dashboard({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'q
     title: item.job.title,
     company: item.job.company,
     location: item.job.location,
-    salary: formatSalary(item.job.pay),
+    salary: formatSalary(item.job.payMin, item.job.payMax),
     postedTime: formatPostedTime(item.job.postedAt),
     variant: 'dark' as const
   })) || [];
@@ -249,6 +250,7 @@ export function Dashboard({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'q
             <div className="text-white font-['Pavanam',sans-serif] text-xl opacity-60">No recommended jobs found yet.</div>
           )}
         </div>
+        <GetStartedBanner />
       </div>
     </DashboardLayout>
   );

@@ -8,8 +8,9 @@ export interface OnboardingResponse {
   data?: any;
 }
 
+// Data shape expected by the UI (matches OnboardingData store mostly)
 export interface UserOnboardingData {
-  id: number;
+  id?: number;
   usResidency: boolean;
   workAuthorization: string;
   salaryPreference: string;
@@ -36,8 +37,47 @@ export interface UserOnboardingData {
     label: string;
     url: string;
   }>;
-  userId: number;
-  audit: {
+  userId?: number;
+  audit?: {
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+// Data shape returned by/sent to the Backend
+export interface APIOnboardingData {
+  id?: number;
+  usResidency: boolean;
+  workAuthorization: string;
+  salaryMin: number;
+  salaryMax: number;
+  employmentStatus: string;
+  jobTitle: string[];
+  experienceLevel: string;
+  educationLevel: string;
+  yearsExperienceMin: number;
+  yearsExperienceMax: number | null;
+  industries: string[];
+  zipCode: string;
+  phoneNumber?: string; // Added based on JSON
+  relocation: string;
+  workLocation: string[];
+  workType: string[];
+  gender: string;
+  sexualOrientation: string;
+  transgender: string;
+  ethnicity: string;
+  disability: string;
+  sponsorship: string;
+  securityClearance: string;
+  clearanceLevel: string;
+  profileLinks: Array<{
+    type: 'linkedin' | 'github' | 'website' | 'custom';
+    label: string;
+    url: string;
+  }>;
+  userId?: number;
+  audit?: {
     createdAt: string;
     updatedAt: string;
   };
@@ -60,28 +100,60 @@ const UserService = () => {
             url: link.url
           }));
 
-        const cleanData = {
-          usResidency: data.usResidency,
-          workAuthorization: data.workAuthorization,
-          salaryPreference: data.salaryPreference,
-          employmentStatus: data.employmentStatus,
-          jobTitle: data.jobTitle,
-          experienceLevel: data.experienceLevel,
-          educationLevel: data.educationLevel,
-          yearsExperience: data.yearsExperience,
-          industries: data.industries,
-          zipCode: data.zipCode,
-          relocation: data.relocation,
-          workLocation: data.workLocation,
-          workType: data.workType,
-          gender: data.gender,
-          sexualOrientation: data.sexualOrientation,
-          transgender: data.transgender,
-          ethnicity: data.ethnicity,
-          disability: data.disability,
-          sponsorship: data.sponsorship,
-          securityClearance: data.securityClearance,
-          clearanceLevel: data.clearanceLevel,
+        // Parse Salary
+        // Expected format: "60000-120000"
+        let salaryMin = 0;
+        let salaryMax = 0;
+        if (data.salaryPreference) {
+          const parts = data.salaryPreference.split('-').map(Number);
+          if (parts.length === 2) {
+            salaryMin = parts[0];
+            salaryMax = parts[1];
+          }
+        }
+
+        // Parse Years Experience
+        // Options: "0-1", "1-3", "3-5", "5-10", "10-15", "15+"
+        let yearsExperienceMin = 0;
+        let yearsExperienceMax: number | null = null;
+
+        if (data.yearsExperience) {
+          if (data.yearsExperience.includes('+')) {
+            yearsExperienceMin = parseInt(data.yearsExperience.replace('+', ''), 10);
+            yearsExperienceMax = null;
+          } else {
+            const parts = data.yearsExperience.split('-').map(Number);
+            if (parts.length === 2) {
+              yearsExperienceMin = parts[0];
+              yearsExperienceMax = parts[1];
+            }
+          }
+        }
+
+        const cleanData: Partial<APIOnboardingData> = {
+          usResidency: data.usResidency ?? false,
+          workAuthorization: data.workAuthorization || '',
+          salaryMin,
+          salaryMax,
+          employmentStatus: data.employmentStatus || '',
+          jobTitle: data.jobTitle || [],
+          experienceLevel: data.experienceLevel || '',
+          educationLevel: data.educationLevel || '',
+          yearsExperienceMin,
+          yearsExperienceMax,
+          industries: data.industries || [],
+          zipCode: data.zipCode || '',
+          relocation: data.relocation || '',
+          workLocation: data.workLocation || [],
+          workType: data.workType || [],
+          gender: data.gender || '',
+          sexualOrientation: data.sexualOrientation || '',
+          transgender: data.transgender || '',
+          ethnicity: data.ethnicity || '',
+          disability: data.disability || '',
+          sponsorship: data.sponsorship || '',
+          securityClearance: data.securityClearance || '',
+          clearanceLevel: data.clearanceLevel || '',
           profileLinks: profileLinksToSend,
         };
 
@@ -161,8 +233,35 @@ const UserService = () => {
 
   const useFetchUserOnboardingData = (enabled: boolean = true) => {
     const fetchOnboardingData = async (): Promise<UserOnboardingData> => {
-      const response = await instance.get('/api/v1/user-onboarding');
-      return response.data;
+      const response = await instance.get<APIOnboardingData>('/api/v1/user-onboarding');
+      const apiData = response.data;
+
+      // Transform API data back to UI Format
+
+      // Salary
+      let salaryPreference = '';
+      if (apiData.salaryMin !== undefined && apiData.salaryMax !== undefined) {
+        salaryPreference = `${apiData.salaryMin}-${apiData.salaryMax}`;
+      }
+
+      // Years Experience
+      let yearsExperience = '';
+      if (apiData.yearsExperienceMin !== undefined) {
+        if (apiData.yearsExperienceMax === null) {
+          yearsExperience = `${apiData.yearsExperienceMin}+`;
+        } else if (apiData.yearsExperienceMax !== undefined) {
+          yearsExperience = `${apiData.yearsExperienceMin}-${apiData.yearsExperienceMax}`;
+        }
+      }
+
+      const uiData: UserOnboardingData = {
+        ...apiData,
+        salaryPreference,
+        yearsExperience,
+        // Fallback mostly just in case types clash, but spreading apiData should cover most
+      };
+
+      return uiData;
     };
 
     return useQuery({

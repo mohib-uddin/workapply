@@ -237,8 +237,8 @@ export function DynamicOnboardingQuestion({
                 key={String(option.value)}
                 onClick={() => setSelectedValue(option.value)}
                 className={`min-w-[140px] sm:min-w-[240px] lg:min-w-[280px] xl:min-w-[300px] bg-[#1a1a1a] rounded-[4px] border-[2px] lg:border-[3px] 2xl:border-[4px] px-[16px] py-[10px] lg:px-[20px] lg:py-[12px] xl:px-[24px] xl:py-[16px] 2xl:px-[32px] 2xl:py-[20px] transition-all relative overflow-hidden group/btn ${selectedValue === option.value
-                    ? 'border-[#faf9f6]'
-                    : 'border-[#faf9f6]/10 hover:border-[#faf9f6]/40'
+                  ? 'border-[#faf9f6]'
+                  : 'border-[#faf9f6]/10 hover:border-[#faf9f6]/40'
                   }`}
               >
                 {selectedValue === option.value && (
@@ -262,8 +262,8 @@ export function DynamicOnboardingQuestion({
               <button
                 onClick={handleSelectAll}
                 className={`w-full max-w-[300px] sm:max-w-[400px] lg:max-w-[500px] bg-[#1a1a1a] rounded-[4px] border-[2px] lg:border-[3px] 2xl:border-[4px] px-[10px] py-[10px] lg:px-[12px] lg:py-[12px] xl:px-[14px] xl:py-[14px] 2xl:px-[16px] 2xl:py-[16px] transition-all ${selectedValues.length === question.multiSelectOptions.length
-                    ? 'border-[#faf9f6]'
-                    : 'border-[#faf9f6]/10 hover:border-[#faf9f6]/40'
+                  ? 'border-[#faf9f6]'
+                  : 'border-[#faf9f6]/10 hover:border-[#faf9f6]/40'
                   }`}
               >
                 <p className="font-['Pavanam',sans-serif] text-white text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[32px] leading-[1.0]">
@@ -277,8 +277,8 @@ export function DynamicOnboardingQuestion({
                   key={option.value}
                   onClick={() => toggleSelection(option.value)}
                   className={`min-w-[140px] sm:min-w-[240px] lg:min-w-[280px] xl:min-w-[300px] bg-[#1a1a1a] rounded-[4px] border-[2px] lg:border-[3px] 2xl:border-[4px] px-[16px] py-[10px] lg:px-[20px] lg:py-[12px] xl:px-[24px] xl:py-[16px] 2xl:px-[32px] 2xl:py-[20px] transition-all flex items-center justify-center text-center ${selectedValues.includes(option.value)
-                      ? 'border-[#faf9f6]'
-                      : 'border-[#faf9f6]/10 hover:border-[#faf9f6]/40'
+                    ? 'border-[#faf9f6]'
+                    : 'border-[#faf9f6]/10 hover:border-[#faf9f6]/40'
                     }`}
                 >
                   <p className="font-['Pavanam',sans-serif] text-white text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[22px] 2xl:text-[32px] leading-tight">

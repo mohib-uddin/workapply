@@ -1,9 +1,11 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import svgPaths from "@/components/ui/icons/onboarding-step-svg";
 import imgLogo4 from "figma:asset/183455f9c95614951c915b43688a9887b44c6a17.png";
 import { BackgroundDecor } from "@/components/ui/BackgroundDecor";
 import { useUploadResume } from "@/services/resume-upload.service";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "motion/react";
+import { Loader2, CheckCircle2, FileText } from "lucide-react";
 
 function NotificationIcon() {
   return (
@@ -65,7 +67,6 @@ function UploadIcon() {
   );
 }
 
-
 interface UploadResumePageProps {
   userInitials?: string;
   onUploadComplete?: () => void;
@@ -75,8 +76,28 @@ export function UploadResumePage({ userInitials = "SB", onUploadComplete }: Uplo
   const [dragActive, setDragActive] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'parsing' | 'success'>('idle');
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const uploadResumeMutation = useUploadResume();
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isUploading && uploadStatus === 'uploading' && uploadProgress < 90) {
+      interval = setInterval(() => {
+        setUploadProgress(prev => {
+          const increment = Math.random() * 15;
+          return Math.min(prev + increment, 90);
+        });
+      }, 400);
+    } else if (uploadStatus === 'parsing' && uploadProgress < 98) {
+      interval = setInterval(() => {
+        setUploadProgress(prev => Math.min(prev + 0.5, 98));
+      }, 200);
+    }
+    return () => clearInterval(interval);
+  }, [isUploading, uploadStatus, uploadProgress]);
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -121,23 +142,33 @@ export function UploadResumePage({ userInitials = "SB", onUploadComplete }: Uplo
 
     setUploadedFile(file);
     setIsUploading(true);
+    setUploadProgress(0);
+    setUploadStatus('uploading');
 
     try {
       const result = await uploadResumeMutation.mutateAsync(file);
       if (result.success) {
-        // Trigger navigation to onboarding step after a short delay
+        setUploadStatus('parsing');
+        // Simulate parsing delay for better UX
         setTimeout(() => {
-          if (onUploadComplete) {
-            onUploadComplete();
-          }
+          setUploadProgress(100);
+          setUploadStatus('success');
+          // Trigger navigation to onboarding step after a short delay
+          setTimeout(() => {
+            if (onUploadComplete) {
+              onUploadComplete();
+            }
+          }, 1000);
         }, 1500);
       } else {
         setIsUploading(false);
         setUploadedFile(null);
+        setUploadStatus('idle');
       }
     } catch (error) {
       setIsUploading(false);
       setUploadedFile(null);
+      setUploadStatus('idle');
     }
   };
 
@@ -168,19 +199,35 @@ export function UploadResumePage({ userInitials = "SB", onUploadComplete }: Uplo
 
           {/* Upload Area */}
           <div className="w-full relative">
-            {/* Progress Bar (shown when file is uploaded) */}
-            {(uploadedFile || isUploading) && (
-              <div className="absolute top-[2px] left-[2px] h-[8px] lg:h-[10px] bg-[#faf9f6] rounded-[5.5px] w-[50%] z-10" />
-            )}
+            {/* Animated Progress Bar */}
+            <AnimatePresence>
+              {(isUploading || uploadStatus !== 'idle') && (
+                <motion.div
+                  initial={{ opacity: 0, scaleX: 0 }}
+                  animate={{ opacity: 1, scaleX: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute top-[2px] left-[2px] right-[2px] h-[8px] lg:h-[10px] bg-[#1a1a1a] rounded-t-[5.5px] z-10 overflow-hidden"
+                >
+                  <motion.div
+                    className="h-full bg-[#611DCD] shadow-[0_0_15px_rgba(97,29,205,0.5)]"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${uploadProgress}%` }}
+                    transition={{ type: "spring", stiffness: 50, damping: 20 }}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <div
-              className={`bg-[#1a1a1a] border ${dragActive ? 'border-[#faf9f6] border-2' : 'border-[#faf9f6]'} border-solid rounded-[6px] lg:rounded-[8px] w-full p-[40px] sm:p-[50px] lg:p-[60px] xl:p-[70px] 2xl:p-[80px] flex flex-col gap-[12px] lg:gap-[14px] xl:gap-[16px] items-center justify-center transition-all cursor-pointer hover:border-opacity-80`}
+              className={`bg-[#1a1a1a] relative rounded-[6px] lg:rounded-[8px] w-full p-[40px] sm:p-[50px] lg:p-[60px] xl:p-[70px] 2xl:p-[80px] flex flex-col gap-[12px] lg:gap-[14px] xl:gap-[16px] items-center justify-center transition-all cursor-pointer hover:bg-[#222]`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
               onDragOver={handleDrag}
               onDrop={handleDrop}
               onClick={onBrowseClick}
             >
+              <div aria-hidden="true" className={`absolute border ${dragActive ? 'border-[#faf9f6] border-2 shadow-[0_0_30px_rgba(250,249,246,0.1)]' : 'border-[#faf9f6]'} border-solid inset-0 pointer-events-none rounded-[6px] lg:rounded-[8px]`} />
+
               <input
                 ref={fileInputRef}
                 type="file"
@@ -189,37 +236,91 @@ export function UploadResumePage({ userInitials = "SB", onUploadComplete }: Uplo
                 onChange={handleChange}
               />
 
-              <UploadIcon />
-
-              <div className="flex flex-col gap-[6px] lg:gap-[8px] items-center w-full">
-                <div className="flex gap-[6px] lg:gap-[8px] items-center justify-center flex-wrap">
-                  <p className="font-['Pavanam',sans-serif] text-white text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[28px] leading-[1.2] text-center">
-                    Drag and drop to upload or
-                  </p>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onBrowseClick();
-                    }}
-                    className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[28px] leading-[1.2] border-b-2 border-transparent hover:border-white transition-colors"
-                  >
-                    Browse
-                  </button>
-                </div>
-                <p className="font-['Pavanam',sans-serif] text-[#9ba1a5] text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[22px] 2xl:text-[28px] leading-[1.2] text-center">
-                  Supported file types .pdf, .png
-                </p>
-                <p className="font-['Pavanam',sans-serif] text-[#9ba1a5] text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[22px] 2xl:text-[28px] leading-[1.2] text-center">
-                  Maximum file size: 10MB
-                </p>
+              <div className="relative">
+                <AnimatePresence mode="wait">
+                  {uploadStatus === 'idle' ? (
+                    <motion.div
+                      key="upload"
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.8, opacity: 0 }}
+                    >
+                      <UploadIcon />
+                    </motion.div>
+                  ) : uploadStatus === 'success' ? (
+                    <motion.div
+                      key="success"
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className="size-[48px] lg:size-[54px] xl:size-[62px] flex items-center justify-center"
+                    >
+                      <CheckCircle2 className="size-full text-[#22c55e]" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="loading"
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className="size-[48px] lg:size-[54px] xl:size-[62px] flex items-center justify-center"
+                    >
+                      <Loader2 className="size-full text-[#611DCD] animate-spin" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
-              {(uploadedFile || isUploading) && (
-                <p className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[14px] lg:text-[16px] xl:text-[18px] leading-[1.2] mt-[8px]">
-                  {isUploading ? 'Uploading...' : `Uploaded: ${uploadedFile?.name}`}
-                </p>
-              )}
+              <div className="flex flex-col gap-[6px] lg:gap-[8px] items-center w-full">
+                <AnimatePresence mode="wait">
+                  {uploadStatus === 'idle' ? (
+                    <motion.div
+                      key="idle-text"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="flex flex-col items-center"
+                    >
+                      <div className="flex gap-[6px] lg:gap-[8px] items-center justify-center flex-wrap">
+                        <p className="font-['Pavanam',sans-serif] text-white text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[28px] leading-[1.2] text-center">
+                          Drag and drop to upload or
+                        </p>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onBrowseClick();
+                          }}
+                          className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[24px] 2xl:text-[28px] leading-[1.2] border-b-2 border-white/20 hover:border-white transition-colors"
+                        >
+                          Browse
+                        </button>
+                      </div>
+                      <p className="font-['Pavanam',sans-serif] text-[#9ba1a5] text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[22px] 2xl:text-[28px] leading-[1.2] text-center mt-2">
+                        Supported file types .pdf, .png | Max 10MB
+                      </p>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="status-text"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="flex flex-col items-center gap-2"
+                    >
+                      <p className="font-['Pavanam',sans-serif] text-white text-[18px] lg:text-[22px] font-medium">
+                        {uploadStatus === 'uploading' && 'Sending file...'}
+                        {uploadStatus === 'parsing' && 'Scanning resume content...'}
+                        {uploadStatus === 'success' && 'Ready to go!'}
+                      </p>
+                      <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10">
+                        <FileText className="size-4 text-[#9ba1a5]" />
+                        <span className="font-['Pavanam',sans-serif] text-[#faf9f6]/80 text-[14px] truncate max-w-[200px]">
+                          {uploadedFile?.name}
+                        </span>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
 

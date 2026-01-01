@@ -7,8 +7,8 @@ import { formatDistanceToNow } from 'date-fns';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { ThumbsUp, ThumbsDown, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { JobQueueWelcomeTour } from '@/components/modules/job-queue/JobQueueWelcomeTour';
-
+import JobQueueWelcomeTour from '@/components/modules/job-queue/JobQueueWelcomeTour';
+import { Skeleton } from "@/components/ui/skeleton";
 // Toggle Component
 function Toggle({ isOn, onToggle }: { isOn: boolean; onToggle: () => void }) {
   return (
@@ -112,7 +112,7 @@ function JobCardSidebar({ job, isSelected, onClick, isLiked, isDisliked, onLike,
             <TooltipProvider>
               <Tooltip delayDuration={300}>
                 <TooltipTrigger asChild>
-                  <p className="text-[17px] lg:text-[19px] font-semibold leading-tight truncate cursor-help">
+                  <p className="text-[17px] lg:text-[19px] font-semibold leading-tight truncate">
                     {job.title}
                   </p>
                 </TooltipTrigger>
@@ -128,7 +128,7 @@ function JobCardSidebar({ job, isSelected, onClick, isLiked, isDisliked, onLike,
             <TooltipProvider>
               <Tooltip delayDuration={300}>
                 <TooltipTrigger asChild>
-                  <p className="text-[13px] lg:text-[15px] opacity-70 truncate cursor-help">
+                  <p className="text-[13px] lg:text-[15px] opacity-70 truncate">
                     {job.company}
                   </p>
                 </TooltipTrigger>
@@ -215,7 +215,7 @@ function DetailBadge({ text, className = "" }: { text: string; className?: strin
     <TooltipProvider>
       <Tooltip delayDuration={300}>
         <TooltipTrigger asChild>
-          <div className={`flex gap-2 items-center min-w-0 max-w-full cursor-help ${className}`}>
+          <div className={`flex gap-2 items-center min-w-0 max-w-full ${className}`}>
             <div className="size-1 rounded-full bg-[#faf9f6]/60 shrink-0" />
             <p className="font-['Pavanam',sans-serif] text-[#faf9f6]/80 text-[13px] lg:text-[14px] truncate">
               {text}
@@ -230,6 +230,48 @@ function DetailBadge({ text, className = "" }: { text: string; className?: strin
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
+  );
+}
+
+// Job Details Skeleton
+function JobDetailsSkeleton() {
+  return (
+    <div className="px-[40px] lg:px-[80px] py-[40px] lg:py-[60px] relative w-full h-full">
+      <div className="max-w-[800px]">
+        {/* Company Logo and Title */}
+        <div className="mb-[40px]">
+          <div className="flex items-center gap-[16px] mb-[24px]">
+            {/* Logo Placeholder */}
+            <Skeleton className="h-[48px] w-[120px] rounded-[4px] bg-[#2a2a2a]" />
+          </div>
+
+          {/* Title Placeholder */}
+          <Skeleton className="h-[42px] w-[300px] lg:w-[400px] mb-[24px] bg-[#2a2a2a] rounded-[4px]" />
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-[12px]">
+            <Skeleton className="h-[36px] w-[100px] rounded-[4px] bg-[#2a2a2a]" />
+            <Skeleton className="h-[36px] w-[120px] rounded-[4px] bg-[#2a2a2a]" />
+            <Skeleton className="h-[36px] w-[140px] rounded-[4px] bg-[#2a2a2a]" />
+            <Skeleton className="h-[36px] w-[90px] rounded-[4px] bg-[#2a2a2a]" />
+          </div>
+        </div>
+
+        {/* content description skeleton */}
+        <div className="flex flex-col gap-4">
+          <Skeleton className="h-[24px] w-full bg-[#2a2a2a] rounded-[4px]" />
+          <Skeleton className="h-[24px] w-[90%] bg-[#2a2a2a] rounded-[4px]" />
+          <Skeleton className="h-[24px] w-[95%] bg-[#2a2a2a] rounded-[4px]" />
+          <Skeleton className="h-[24px] w-[80%] bg-[#2a2a2a] rounded-[4px]" />
+          <div className="mt-6 flex flex-col gap-4">
+            <Skeleton className="h-[32px] w-[200px] bg-[#2a2a2a] rounded-[4px]" />
+            <Skeleton className="h-[24px] w-full bg-[#2a2a2a] rounded-[4px]" />
+            <Skeleton className="h-[24px] w-[92%] bg-[#2a2a2a] rounded-[4px]" />
+            <Skeleton className="h-[24px] w-[88%] bg-[#2a2a2a] rounded-[4px]" />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -343,14 +385,14 @@ interface Job {
   description: string;
 }
 
-const formatSalary = (pay: RecommendedJob['job']['pay']) => {
-  if (!pay || (!pay.min && !pay.max)) return 'Salary not specified';
+const formatSalary = (min: number | null, max: number | null) => {
+  if ((min === null || min === 0) && (max === null || max === 0)) return 'Salary not specified';
   const formatAmount = (amount: number | null) => {
-    if (amount === null) return '';
+    if (amount === null || amount === 0) return '';
     return amount >= 1000 ? `$${Math.round(amount / 1000)}K` : `$${amount}`;
   };
-  if (pay.min && pay.max) return `${formatAmount(pay.min)}-${formatAmount(pay.max)}`;
-  return formatAmount(pay.min || pay.max);
+  if (min && max) return `${formatAmount(min)}-${formatAmount(max)}`;
+  return formatAmount(min || max);
 };
 
 const getMatchPath = (score: number) => {
@@ -368,7 +410,7 @@ export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'qu
   const [dislikedJobs, setDislikedJobs] = useState<Set<number>>(new Set());
   const [showWelcomeTour, setShowWelcomeTour] = useState(false);
 
-  const { useFetchRecommendedJobs } = JobService();
+  const { useFetchRecommendedJobs, useFetchJobById } = JobService();
   const { data: recommendedJobsData, isLoading } = useFetchRecommendedJobs(50);
 
   // Check if this is the first visit to Job Queue
@@ -422,87 +464,106 @@ export function JobQueue({ onNavigate }: { onNavigate?: (page: 'dashboard' | 'qu
     });
   };
 
+  // Job List Data (from recommendation endpoint)
   const jobs: Job[] = (recommendedJobsData?.data || []).map(item => ({
     id: item.id,
     title: item.job.title,
     company: item.job.company,
     location: item.job.location,
     postedTime: formatDistanceToNow(new Date(item.job.postedAt), { addSuffix: true }),
-    salary: formatSalary(item.job.pay),
+    salary: formatSalary(item.job.payMin, item.job.payMax),
     match: Math.round(item.score * 100),
     matchPath: getMatchPath(item.score),
-    description: item.job.description,
+    description: item.job.description || '', // Fallback
     workType: item.job.position,
     jobType: item.job.platform,
   }));
 
+  // Ensure selectedJobId is set initially
   useEffect(() => {
     if (jobs.length > 0 && selectedJobId === null) {
       setSelectedJobId(jobs[0].id);
     }
   }, [jobs, selectedJobId]);
 
-  const selectedJob = jobs.find(j => j.id === selectedJobId) || jobs[0];
+  // Fetch Full Details for Selected Job
+  const { data: jobDetails, isLoading: isLoadingDetails } = useFetchJobById(selectedJobId);
+
+  // Merge List Data with Full Details
+  const selectedJobFromList = jobs.find(j => j.id === selectedJobId);
+
+  const selectedJob: Job | null = selectedJobFromList ? {
+    ...selectedJobFromList,
+    // Override/Augment with details if available
+    description: jobDetails?.description || selectedJobFromList.description,
+    salary: jobDetails
+      ? formatSalary(jobDetails.payMin, jobDetails.payMax)
+      : selectedJobFromList.salary,
+    workType: jobDetails?.parsedJobType || selectedJobFromList.workType,
+    jobType: jobDetails?.parsedEmploymentType || selectedJobFromList.jobType,
+  } : null;
 
   return (
     <>
       <JobQueueWelcomeTour open={showWelcomeTour} onClose={handleCloseTour} />
-      
+
       <DashboardLayout currentTab="queue" onNavigate={onNavigate} showBackground={false} contentScrollable={false}>
-      <div className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden relative">
-        {/* Left Sidebar - Job List */}
-        <div className="w-full lg:w-[384px] bg-[#0f0f0f] border-r border-[#1a1a1a] flex flex-col shrink-0 h-[40vh] lg:h-full overflow-hidden">
-          {/* Auto-Apply Banner */}
-          <div className="p-[16px] border-b border-[#1a1a1a] shrink-0">
-            <AutoApplyBanner 
-              isOn={autoApplyOn} 
-              onToggle={() => setAutoApplyOn(!autoApplyOn)}
-              onHelpClick={() => setShowWelcomeTour(true)}
-            />
+        <div className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden relative">
+          {/* Left Sidebar - Job List */}
+          <div className="w-full lg:w-[384px] bg-[#0f0f0f] border-r border-[#1a1a1a] flex flex-col shrink-0 h-[40vh] lg:h-full overflow-hidden">
+            {/* Auto-Apply Banner */}
+            <div className="p-[16px] border-b border-[#1a1a1a] shrink-0">
+              <AutoApplyBanner
+                isOn={autoApplyOn}
+                onToggle={() => setAutoApplyOn(!autoApplyOn)}
+                onHelpClick={() => setShowWelcomeTour(true)}
+              />
+            </div>
+
+            {/* Job Cards - Scrollable */}
+            <div className="flex-1 overflow-y-auto">
+              {isLoading ? (
+                <div className="p-8 text-center text-[#faf9f6] opacity-60 font-['Pavanam',sans-serif]">
+                  Loading opportunities...
+                </div>
+              ) : jobs.length > 0 ? (
+                jobs.map(job => (
+                  <JobCardSidebar
+                    key={job.id}
+                    job={job}
+                    isSelected={selectedJobId === job.id}
+                    onClick={() => setSelectedJobId(job.id)}
+                    isLiked={likedJobs.has(job.id)}
+                    isDisliked={dislikedJobs.has(job.id)}
+                    onLike={(e) => handleLike(e, job.id)}
+                    onDislike={(e) => handleDislike(e, job.id)}
+                  />
+                ))
+              ) : (
+                <div className="p-8 text-center text-[#faf9f6] opacity-60 font-['Pavanam',sans-serif]">
+                  No recommended jobs found.
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Job Cards - Scrollable */}
-          <div className="flex-1 overflow-y-auto">
-            {isLoading ? (
-              <div className="p-8 text-center text-[#faf9f6] opacity-60 font-['Pavanam',sans-serif]">
-                Loading opportunities...
-              </div>
-            ) : jobs.length > 0 ? (
-              jobs.map(job => (
-                <JobCardSidebar
-                  key={job.id}
-                  job={job}
-                  isSelected={selectedJobId === job.id}
-                  onClick={() => setSelectedJobId(job.id)}
-                  isLiked={likedJobs.has(job.id)}
-                  isDisliked={dislikedJobs.has(job.id)}
-                  onLike={(e) => handleLike(e, job.id)}
-                  onDislike={(e) => handleDislike(e, job.id)}
-                />
-              ))
-            ) : (
-              <div className="p-8 text-center text-[#faf9f6] opacity-60 font-['Pavanam',sans-serif]">
-                No recommended jobs found.
-              </div>
-            )}
+          {/* Right Panel - Job Details - Scrollable */}
+          <div className="flex-1 relative h-full overflow-hidden">
+            <BackgroundDecor />
+            <div className="h-full overflow-y-auto relative z-10">
+              {isLoadingDetails ? (
+                <JobDetailsSkeleton />
+              ) : selectedJob ? (
+                <JobDetailsPanel job={selectedJob} />
+              ) : !isLoading && (
+                <div className="h-full flex items-center justify-center text-[#faf9f6] opacity-60 font-['Pavanam',sans-serif]">
+                  Select a job to view details
+                </div>
+              )}
+            </div>
           </div>
         </div>
-
-        {/* Right Panel - Job Details - Scrollable */}
-        <div className="flex-1 relative h-full overflow-hidden">
-          <BackgroundDecor />
-          <div className="h-full overflow-y-auto relative z-10">
-            {selectedJob ? (
-              <JobDetailsPanel job={selectedJob} />
-            ) : !isLoading && (
-              <div className="h-full flex items-center justify-center text-[#faf9f6] opacity-60 font-['Pavanam',sans-serif]">
-                Select a job to view details
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </DashboardLayout>
+      </DashboardLayout>
     </>
   );
 }

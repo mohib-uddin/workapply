@@ -24,17 +24,38 @@ export interface RecommendedJob {
         platform: string;
         sourceUrl: string;
         postedAt: string;
-        pay: {
-            min: number | null;
-            max: number | null;
-            currency: string | null;
-            per: string | null;
-        };
+        payMin: number | null;
+        payMax: number | null;
+        payCurrency: string | null;
+        payPer: string | null;
     };
 }
 
 export interface RecommendedJobsResponse {
     data: RecommendedJob[];
+}
+
+export interface JobDetail {
+    id: number;
+    sourceId: string;
+    company: string;
+    title: string;
+    location: string;
+    description: string;
+    position: string;
+    platform: string;
+    sourceUrl: string;
+    postedAt: string;
+    payMin: number | null;
+    payMax: number | null;
+    payCurrency: string | null;
+    payPer: string | null;
+    locationPreference: string | null;
+    employmentType: string | null;
+    parsedJobTitle: string;
+    parsedRoleOverview: string;
+    parsedJobType: string;
+    parsedEmploymentType: string;
 }
 
 const JobService = () => {
@@ -51,8 +72,24 @@ const JobService = () => {
         });
     };
 
+    const useFetchJobById = (jobId: number | null) => {
+        const fetchJob = async (): Promise<JobDetail> => {
+            if (!jobId) throw new Error("Job ID is required");
+            const response = await instance.get(`/api/v1/jobs/${jobId}`);
+            return response.data;
+        };
+
+        return useQuery({
+            queryKey: ['job', jobId],
+            queryFn: fetchJob,
+            enabled: !!jobId,
+            retry: 1,
+        });
+    };
+
     return {
         useFetchRecommendedJobs,
+        useFetchJobById,
     };
 };
 
