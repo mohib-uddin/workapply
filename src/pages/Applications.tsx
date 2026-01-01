@@ -208,16 +208,11 @@ export function Applications({ onNavigate }: { onNavigate?: (page: 'dashboard' |
             <div className="flex-1 flex flex-col p-6 lg:p-10 max-w-[1600px] mx-auto w-full relative z-10 h-full">
 
                 {/* Header Section */}
-                <div className="flex flex-col gap-2 mb-8">
-                    <div className="flex items-center gap-3">
-                        <div className="bg-[#611dcd]/20 p-2 rounded-lg">
-                            <Send className="text-[#611dcd] size-6" />
-                        </div>
-                        <h1 className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[28px] lg:text-[32px] font-semibold leading-tight">
-                            Completed Applications
-                        </h1>
-                    </div>
-                    <p className="font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px] ml-[52px]">
+                <div className="flex flex-col gap-1 mb-8">
+                    <h1 className="font-['Pavanam',sans-serif] text-[#faf9f6] text-[28px] lg:text-[32px] font-semibold leading-tight">
+                        Completed Applications
+                    </h1>
+                    <p className="font-['Pavanam',sans-serif] text-[#9ba1a5] text-[16px]">
                         Track your job applications and their progress
                     </p>
                 </div>
